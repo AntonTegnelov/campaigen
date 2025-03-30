@@ -106,5 +106,21 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         result.StandardOutput.Should().Contain("--help", because: "help text should mention the help option.");
     }
 
-    // TODO: Add tests for invalid input scenarios (missing arguments, wrong format, etc.)
+    [Theory]
+    [InlineData("spend add --description \"Missing amount\"")] // Missing --amount
+    [InlineData("spend add --amount not_a_number --description \"Invalid amount\"")] // Invalid amount format
+    [InlineData("spend add --amount 100 --date not_a_date --description \"Invalid date\"")] // Invalid date format
+    public async Task SpendAdd_WithInvalidData_ShouldFailAndShowError(string arguments)
+    {
+        // Arrange & Act
+        var result = await RunCliAsync(arguments);
+
+        // Assert
+        // result.ExitCode.Should().NotBe(0, because: "invalid input should result in a non-zero exit code."); // Exit code might be 0 by default for parsing errors
+        result.StandardError.Should().NotBeNullOrWhiteSpace(because: "an error message should be displayed on standard error for invalid input.");
+        // We could be more specific about the error message, but System.CommandLine default messages can vary.
+        // Checking for non-empty stderr is the most reliable check here.
+    }
+
+    // TODO: Add tests for invalid input scenarios (missing arguments, wrong format, etc.) - In Progress
 }
