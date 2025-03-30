@@ -74,8 +74,8 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Define focused `IInfluencerRepository` interface (`IInfluencerRepository.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
   - [x] Define focused `IInfluencerService` interface (`IInfluencerService.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
 - **[Application - DTOs]** (`src/Campaigen.Core.Application/Features/InfluencerManagement/DTOs`)
-  - [ ] Define `InfluencerDto` (`InfluencerDto.cs`).
-  - [ ] Define `CreateInfluencerDto` (`CreateInfluencerDto.cs`).
+  - [x] Define `InfluencerDto` (`InfluencerDto.cs`).
+  - [x] Define `CreateInfluencerDto` (`CreateInfluencerDto.cs`).
 - **[Application - Logic]** (`src/Campaigen.Core.Application/Features/InfluencerManagement`)
   - [ ] Implement `InfluencerService` (`InfluencerService.cs`) - Use `IInfluencerRepository` asynchronously, map between Domain Entities and DTOs.
 - **[Infrastructure - Persistence]** (`src/Campaigen.Core.Infrastructure/Features/InfluencerManagement/Persistence`)
