@@ -1,0 +1,53 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Coding Conventions (Prioritizing Stability)
+
+This document outlines coding conventions to follow, prioritizing code stability, robustness, and maintainability above development speed.
+
+- **Explicit Typing:**
+  - In languages that support it (e.g., TypeScript, Python type hints, C#, Java), always specify types explicitly for function signatures, variables, constants, and data structures.
+  - Avoid ambiguous types (`any`, `object` without specification) or heavy reliance on type inference where it reduces clarity.
+- **Comprehensive Error Handling:**
+  - Utilize the language's idiomatic error handling mechanisms thoroughly (e.g., `Result`/`Option` types, specific exceptions, error codes).
+  - Avoid generic error handling (e.g., catching base `Exception` in Python/Java/C#) or suppressing errors silently.
+  - Explicitly handle potential null or undefined values. Avoid operations that could lead to null reference errors.
+  - Do not use functions/methods that can panic or crash unexpectedly (like Rust's `unwrap()`/`expect()`) unless the failure represents an unrecoverable program state or a definite logic bug (and document it clearly).
+  - Return errors explicitly from functions rather than relying on global state or side effects for error signaling.
+- **Immutability:**
+  - Prefer immutable data structures and variables whenever possible.
+  - Use mutable state sparingly, locally, and only when necessary for performance or clarity.
+- **Defensive Programming:**
+  - Validate inputs rigorously, especially data coming from external sources (user input, APIs, files, configuration).
+  - Check preconditions, postconditions, and invariants within functions and classes.
+  - Explicitly handle edge cases and potential failure modes (e.g., empty collections, division by zero, integer overflows using checked arithmetic where available).
+- **Dependency Management:**
+  - Prefer standard library features over external dependencies unless the external library provides significant, well-tested functionality that is crucial for the task.
+  - Choose external dependencies carefully, favouring mature, well-maintained libraries with stable APIs.
+  - Keep dependencies reasonably up-to-date, but prioritize stability over using the absolute latest versions immediately upon release.
+- **Concurrency and Parallelism:**
+  - Handle concurrency with extreme care. Ensure thread safety for shared data using appropriate synchronization mechanisms (locks, mutexes, atomics).
+  - Avoid data races and deadlocks. Prefer higher-level concurrency abstractions if available and suitable.
+- **Resource Management:**
+  - Ensure deterministic cleanup of resources like file handles, network connections, database connections, and memory buffers using language features like `using` (C#), `try-with-resources` (Java), context managers (`with` in Python), RAII/`Drop` (Rust), or explicit `finally` blocks.
+- **Simplicity and Readability:**
+  - Write clear, straightforward code. Avoid overly complex or "clever" solutions that might obscure logic.
+  - Prioritize readability. Use meaningful names for variables, functions, and classes.
+- **Modularity:**
+  - Design components (functions, classes, modules) to be small, focused on a single responsibility, and loosely coupled.
+- **Testing:**
+  - Write unit tests for core logic, focusing on correctness, edge cases, and error handling paths.
+  - Write integration tests to verify interactions between components.
+  - Aim for sufficient test coverage to ensure confidence in code stability.
+- **Linting:**
+  - Strictly adhere to established linters for the target language (e.g., `clippy`, `eslint`, `pylint`, Roslyn Analyzers).
+  - Configure linters for maximum strictness and treat warnings as errors where appropriate.
+- **Documentation:**
+  - Write clear documentation comments for public APIs (functions, classes, modules), explaining their purpose, parameters, return values, potential errors/exceptions, and any important usage notes or assumptions.
+  - Add internal comments (`//` or similar) to explain complex or non-obvious logic.
+- **Code Review Simulation:**
+  - Before finalizing code, explicitly review it for potential stability issues, adherence to these conventions, edge cases, and error handling robustness.
+- **Incremental Changes:**
+  - Prefer making smaller, verifiable changes rather than large, monolithic ones. Test incrementally.
