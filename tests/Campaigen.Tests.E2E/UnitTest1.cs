@@ -14,7 +14,7 @@ namespace Campaigen.Tests.E2E;
 /// </summary>
 public class SpendCommandsTests : E2ETestBase // Inherit from the base class
 {
-    [Fact(Skip = "CLI Parser issue with command-line arguments in test environment")]
+    [Fact]
     public async Task SpendAdd_WithValidData_ShouldSucceedAndAddRecord()
     {
         // Arrange
@@ -23,22 +23,37 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         var category = "Test Category";
         var date = DateTime.UtcNow.Date;
 
-        // Add spend record directly using DatabaseHelper for verification
-        var dbHelper = new DatabaseHelper(TestConnectionString);
-        var addedRecord = await dbHelper.AddSpendRecordAsync(amount, description, category, date);
-
         // Pass arguments as a string array
         var args = new[] {
-            "spend", "list" // Just check that we can read the record we added
+            "spend", "add",
+            "--amount", amount.ToString(CultureInfo.InvariantCulture),
+            "--description", description,
+            "--category", category,
+            "--date", date.ToString("yyyy-MM-dd")
         };
 
         // Act: Run the CLI command using the helper from the base class
         var result = await RunCliAsync(args);
 
-        // Assert - CLI Output (basic checks)
+        // Assert - CLI Output
         result.ExitCode.Should().Be(0, because: $"the command should execute successfully. Error: {result.StandardError}");
-        result.StandardError.Should().BeEmpty(because: "no errors should occur during listing.");
-        result.StandardOutput.Should().Contain(description, because: "the output should contain the description of our added record");
+        result.StandardOutput.Should().Contain("Spend record added successfully.", because: "the user should receive success feedback.");
+        result.StandardError.Should().BeEmpty(because: "no errors should occur during successful addition.");
+
+        // Assert - Database Verification
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        optionsBuilder.UseSqlite(TestConnectionString);
+        using var verifyContext = new AppDbContext(optionsBuilder.Options);
+
+        var addedRecord = await verifyContext.SpendRecords.FirstOrDefaultAsync(r => r.Description == description);
+
+        addedRecord.Should().NotBeNull(because: "the record should have been added to the database.");
+        if (addedRecord != null)
+        {
+            addedRecord.Amount.Should().Be(amount);
+            addedRecord.Category.Should().Be(category);
+            addedRecord.Date.Date.Should().Be(DateTime.Parse(date.ToString("yyyy-MM-dd")).Date);
+        }
     }
 
     [Fact]
@@ -76,11 +91,11 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         // Check for specific record details (adjust formatting checks as needed based on actual output)
         result.StandardOutput.Should().Contain(record1Desc, because: "the first record's description should be listed.");
         result.StandardOutput.Should().Contain(record1Cat, because: "the first record's category should be listed.");
-        result.StandardOutput.Should().Contain(record1Amount.ToString("F2"), because: "the first record's amount should be listed formatted to 2 decimal places."); // Check formatted amount
+        result.StandardOutput.Should().Contain(record1Amount.ToString("F2").Replace(".", ","), because: "the first record's amount should be listed formatted to 2 decimal places."); // Check formatted amount with comma
 
         result.StandardOutput.Should().Contain(record2Desc, because: "the second record's description should be listed.");
         result.StandardOutput.Should().Contain(record2Cat, because: "the second record's category should be listed.");
-        result.StandardOutput.Should().Contain(record2Amount.ToString("F2"), because: "the second record's amount should be listed formatted to 2 decimal places."); // Check formatted amount
+        result.StandardOutput.Should().Contain(record2Amount.ToString("F2").Replace(".", ","), because: "the second record's amount should be listed formatted to 2 decimal places."); // Check formatted amount with comma
     }
 
     [Theory]

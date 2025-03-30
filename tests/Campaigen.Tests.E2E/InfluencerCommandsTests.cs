@@ -12,31 +12,46 @@ namespace Campaigen.Tests.E2E;
 /// </summary>
 public class InfluencerCommandsTests : E2ETestBase // Inherit from the base class
 {
-    [Fact(Skip = "CLI Parser issue with command-line arguments in test environment")]
+    [Fact]
     public async Task InfluencerAdd_WithValidData_ShouldSucceedAndAddRecord()
     {
         // Arrange
         var name = "Test Influencer";
-        var handle = "@testinfluencer";
-        var platform = "TestPlatform";
-        var niche = "Testing";
-
-        // Add influencer directly using DatabaseHelper for verification
-        var dbHelper = new DatabaseHelper(TestConnectionString);
-        var addedRecord = await dbHelper.AddInfluencerAsync(name, handle, platform, niche);
+        var handle = "testhandle";
+        var platform = "Instagram";
+        var niche = "Test Niche";
 
         // Pass arguments as a string array
         var args = new[] {
-            "influencer", "list" // Just check that we can read the record we added
+            "influencer", "add",
+            "--influencer-name", name,
+            "--handle", handle,
+            "--platform", platform,
+            "--niche", niche
         };
 
         // Act: Run the CLI command using the helper from the base class
         var result = await RunCliAsync(args);
 
-        // Assert - CLI Output (basic checks)
+        // Assert - CLI Output
         result.ExitCode.Should().Be(0, because: $"the command should execute successfully. Error: {result.StandardError}");
-        result.StandardError.Should().BeEmpty(because: "no errors should occur during listing.");
-        result.StandardOutput.Should().Contain(name, because: "the output should contain the name of our added record");
+        result.StandardOutput.Should().Contain("Influencer added successfully", because: "the user should receive success feedback.");
+        result.StandardError.Should().BeEmpty(because: "no errors should occur during successful addition.");
+
+        // Assert - Database Verification
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        optionsBuilder.UseSqlite(TestConnectionString);
+        using var verifyContext = new AppDbContext(optionsBuilder.Options);
+
+        var addedRecord = await verifyContext.Influencers.FirstOrDefaultAsync(i => i.Handle == handle);
+
+        addedRecord.Should().NotBeNull(because: "the record should have been added to the database.");
+        if (addedRecord != null)
+        {
+            addedRecord.Name.Should().Be(name);
+            addedRecord.Platform.Should().Be(platform);
+            addedRecord.Niche.Should().Be(niche);
+        }
     }
 
     [Fact]
@@ -45,17 +60,17 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         // Arrange: Add a couple of records directly using the database helper
         var dbHelper = new DatabaseHelper(TestConnectionString);
 
-        var record1Name = "List Influencer 1";
-        var record1Handle = "@list1";
-        var record1Platform = "Insta";
-        var record1Niche = "List Niche A";
-        await dbHelper.AddInfluencerAsync(record1Name, record1Handle, record1Platform, record1Niche);
+        var name1 = "List Influencer A";
+        var handle1 = "handleA";
+        var platform1 = "YouTube";
+        var niche1 = "Gaming";
+        await dbHelper.AddInfluencerAsync(name1, handle1, platform1, niche1);
 
-        var record2Name = "List Influencer 2";
-        var record2Handle = "@list2";
-        var record2Platform = "TikTak";
-        var record2Niche = "List Niche B";
-        await dbHelper.AddInfluencerAsync(record2Name, record2Handle, record2Platform, record2Niche);
+        var name2 = "List Influencer B";
+        var handle2 = "handleB";
+        var platform2 = "Instagram";
+        var niche2 = "Fashion";
+        await dbHelper.AddInfluencerAsync(name2, handle2, platform2, niche2);
 
         // Act: Run the list command
         var result = await RunCliAsync("influencer", "list");
@@ -64,23 +79,23 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         result.ExitCode.Should().Be(0, because: $"'influencer list' should execute successfully. Error: {result.StandardError}");
         result.StandardError.Should().BeEmpty(because: "no errors should occur when listing.");
 
-        // Verify headers
+        // Verify headers and the presence of both records in the output
         result.StandardOutput.Should().Contain("ID", because: "the output table should have an ID header.");
         result.StandardOutput.Should().Contain("Name", because: "the output table should have a Name header.");
         result.StandardOutput.Should().Contain("Handle", because: "the output table should have a Handle header.");
         result.StandardOutput.Should().Contain("Platform", because: "the output table should have a Platform header.");
         result.StandardOutput.Should().Contain("Niche", because: "the output table should have a Niche header.");
 
-        // Check for specific record details (These will fail if add fails)
-        result.StandardOutput.Should().Contain(record1Name, because: "the first record's name should be listed.");
-        result.StandardOutput.Should().Contain(record1Handle, because: "the first record's handle should be listed.");
-        result.StandardOutput.Should().Contain(record1Platform, because: "the first record's platform should be listed.");
-        result.StandardOutput.Should().Contain(record1Niche, because: "the first record's niche should be listed.");
+        // Check for specific record details
+        result.StandardOutput.Should().Contain(name1, because: "the first record's name should be listed.");
+        result.StandardOutput.Should().Contain(handle1, because: "the first record's handle should be listed.");
+        result.StandardOutput.Should().Contain(platform1, because: "the first record's platform should be listed.");
+        result.StandardOutput.Should().Contain(niche1, because: "the first record's niche should be listed.");
 
-        result.StandardOutput.Should().Contain(record2Name, because: "the second record's name should be listed.");
-        result.StandardOutput.Should().Contain(record2Handle, because: "the second record's handle should be listed.");
-        result.StandardOutput.Should().Contain(record2Platform, because: "the second record's platform should be listed.");
-        result.StandardOutput.Should().Contain(record2Niche, because: "the second record's niche should be listed.");
+        result.StandardOutput.Should().Contain(name2, because: "the second record's name should be listed.");
+        result.StandardOutput.Should().Contain(handle2, because: "the second record's handle should be listed.");
+        result.StandardOutput.Should().Contain(platform2, because: "the second record's platform should be listed.");
+        result.StandardOutput.Should().Contain(niche2, because: "the second record's niche should be listed.");
     }
 
     [Theory]
@@ -100,5 +115,5 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         result.StandardOutput.Should().Contain("--help", because: "help text should mention the help option.");
     }
 
-    // TODO: Add tests for invalid input scenarios
+    // TODO: Add tests for invalid input scenarios (missing required parameters, etc.)
 }

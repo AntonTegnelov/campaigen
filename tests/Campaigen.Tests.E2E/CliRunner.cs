@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq; // Needed for Split and Skip
+using System.Globalization; // For locale-aware decimal formatting
 
 namespace Campaigen.Tests.E2E
 {
@@ -68,9 +69,25 @@ namespace Campaigen.Tests.E2E
             // Use ArgumentList for robustness
             processStartInfo.ArgumentList.Add(cliDllPath); // Add DLL path first
 
-            // Add pre-split arguments from the input array
-            foreach (var arg in args)
+            // Process arguments to handle Windows/PowerShell specific issues
+            foreach (var originalArg in args)
             {
+                var arg = originalArg;
+                
+                // Check if argument is a numeric value and format it according to current culture
+                if (decimal.TryParse(originalArg, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal decimalValue))
+                {
+                    // Use the current culture's decimal separator (comma for many European cultures)
+                    arg = decimalValue.ToString(CultureInfo.CurrentCulture);
+                }
+                
+                // Handle arguments with special characters
+                if (arg.StartsWith("@"))
+                {
+                    // Remove @ prefix to avoid PowerShell response file issues
+                    arg = arg.Substring(1);
+                }
+                
                 processStartInfo.ArgumentList.Add(arg);
             }
 
