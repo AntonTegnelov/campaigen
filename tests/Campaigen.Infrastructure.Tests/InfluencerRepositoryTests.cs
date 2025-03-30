@@ -122,5 +122,73 @@ public class InfluencerRepositoryTests : IDisposable
         results.Should().BeEmpty();
     }
 
-    // TODO: Add tests for UpdateAsync and DeleteAsync
+    [Fact]
+    public async Task UpdateAsync_ShouldModifyExistingInfluencer()
+    {
+        // Arrange
+        var influencerId = Guid.NewGuid();
+        var originalInfluencer = new Influencer
+        {
+            Id = influencerId,
+            Name = "Original Name",
+            Handle = "@original",
+            Platform = "Platform A",
+            Niche = "Niche A"
+        };
+        _context.Influencers.Add(originalInfluencer);
+        await _context.SaveChangesAsync();
+        _context.Entry(originalInfluencer).State = EntityState.Detached; // Detach
+
+        var updatedInfluencer = new Influencer
+        {
+            Id = influencerId, // Same ID
+            Name = "Updated Name", // Updated Name
+            Handle = "@updated", // Updated Handle
+            Platform = originalInfluencer.Platform, // Keep same
+            Niche = "Updated Niche" // Updated Niche
+        };
+
+        // Act
+        await _repository.UpdateAsync(updatedInfluencer);
+
+        // Assert
+        var retrievedInfluencer = await _context.Influencers.FindAsync(influencerId);
+        retrievedInfluencer.Should().NotBeNull();
+        retrievedInfluencer!.Name.Should().Be(updatedInfluencer.Name);
+        retrievedInfluencer.Handle.Should().Be(updatedInfluencer.Handle);
+        retrievedInfluencer.Platform.Should().Be(originalInfluencer.Platform);
+        retrievedInfluencer.Niche.Should().Be(updatedInfluencer.Niche);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveInfluencerFromDatabase()
+    {
+        // Arrange
+        var influencerId = Guid.NewGuid();
+        var influencerToDelete = new Influencer { Id = influencerId, Name = "ToDelete" };
+        _context.Influencers.Add(influencerToDelete);
+        await _context.SaveChangesAsync();
+
+        // Act
+        await _repository.DeleteAsync(influencerId);
+
+        // Assert
+        var retrievedInfluencer = await _context.Influencers.FindAsync(influencerId);
+        retrievedInfluencer.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldDoNothing_WhenInfluencerDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+        var initialCount = await _context.Influencers.CountAsync();
+
+        // Act
+        await _repository.DeleteAsync(nonExistentId);
+
+        // Assert
+        var finalCount = await _context.Influencers.CountAsync();
+        finalCount.Should().Be(initialCount);
+    }
 } 
