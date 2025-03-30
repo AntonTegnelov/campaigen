@@ -95,7 +95,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Configure `System.CommandLine` basic setup in `src/Campaigen.CLI/Program.cs` (RootCommand, DI integration).
 - **[Spend Tracking Commands]** (`src/Campaigen.CLI/Commands/SpendCommands.cs` or similar)
   - [x] Implement `spend add` command - Inject `ISpendTrackingService`, call service methods asynchronously, use `CreateSpendRecordDto`.
-  - [ ] Implement `spend list` command - Inject `ISpendTrackingService`, call service methods asynchronously, display results from `SpendRecordDto` list.
+  - [x] Implement `spend list` command - Inject `ISpendTrackingService`, call service methods asynchronously, display results from `SpendRecordDto` list.
   - [x] Register spend commands with `RootCommand` in `Program.cs`.
 - **[Influencer Management Commands]** (`src/Campaigen.CLI/Commands/InfluencerCommands.cs` or similar)
   - [ ] Implement `influencer add` command - Inject `IInfluencerService`, call service methods asynchronously, use `CreateInfluencerDto`.
