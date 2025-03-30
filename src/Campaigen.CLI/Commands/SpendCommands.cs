@@ -109,7 +109,7 @@ public static class SpendCommands
             {
                 // Call the service
                 var result = await _spendTrackingService.CreateSpendRecordAsync(dto);
-                
+
                 // Always print success message on successful creation
                 Console.WriteLine("Spend record added successfully.");
                 return 0;
@@ -159,11 +159,11 @@ public static class SpendCommands
             try
             {
                 var records = await _spendTrackingService.ListSpendRecordsAsync();
-                
+
                 // Always display the headers
                 Console.WriteLine("\nID                                     Date        Amount  Category        Description");
                 Console.WriteLine(new string('-', 80));
-                
+
                 if (records != null && records.Any())
                 {
                     foreach (var record in records)

@@ -34,10 +34,49 @@ await BuildCommandLine()
             {
                 // Configure EF Core DbContext with SQLite
                 var connectionString = context.Configuration.GetConnectionString("DefaultConnection");
+                Console.WriteLine($"Using connection string: {connectionString}");
+                
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlite(connectionString,
                         // Specify the assembly where migrations are located (Infrastructure project)
                         b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+
+                // DEBUGGING: Create and apply migrations immediately to verify database setup
+                var serviceProvider = services.BuildServiceProvider();
+                try
+                {
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        // Ensure database is created and migrations are applied
+                        dbContext.Database.EnsureCreated();
+                        
+                        // Check if tables exist
+                        var tableCount = dbContext.Database.ExecuteSqlRaw("SELECT count(*) FROM sqlite_master WHERE type='table' AND (name='SpendRecords' OR name='Influencers');");
+                        Console.WriteLine($"Number of tables found: {tableCount}");
+                        
+                        // Add a sample record for testing if none exist
+                        if (!dbContext.SpendRecords.Any())
+                        {
+                            Console.WriteLine("Adding a sample spend record for testing...");
+                            dbContext.SpendRecords.Add(new Campaigen.Core.Domain.Features.SpendTracking.SpendRecord
+                            {
+                                Id = Guid.NewGuid(),
+                                Date = DateTime.UtcNow,
+                                Amount = 100.0m,
+                                Description = "Sample Test Record",
+                                Category = "Test"
+                            });
+                            dbContext.SaveChanges();
+                            Console.WriteLine("Sample record added successfully.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Database initialization error: {ex.Message}");
+                    Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                }
 
                 // Register Application Services & Repositories using Scoped lifetime
                 services.AddScoped<ISpendTrackingRepository, SpendTrackingRepository>();

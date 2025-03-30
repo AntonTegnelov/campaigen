@@ -35,7 +35,7 @@ namespace Campaigen.Tests.E2E
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlite(_connectionString);
-            
+
             using var context = new AppDbContext(optionsBuilder.Options);
             await context.SpendRecords.AddAsync(record);
             await context.SaveChangesAsync();
@@ -59,7 +59,7 @@ namespace Campaigen.Tests.E2E
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlite(_connectionString);
-            
+
             using var context = new AppDbContext(optionsBuilder.Options);
             await context.Influencers.AddAsync(influencer);
             await context.SaveChangesAsync();
@@ -67,4 +67,4 @@ namespace Campaigen.Tests.E2E
             return influencer;
         }
     }
-} 
+}

@@ -44,13 +44,13 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
     {
         // Arrange: Add a couple of records directly using the database helper
         var dbHelper = new DatabaseHelper(TestConnectionString);
-        
+
         var record1Name = "List Influencer 1";
         var record1Handle = "@list1";
         var record1Platform = "Insta";
         var record1Niche = "List Niche A";
         await dbHelper.AddInfluencerAsync(record1Name, record1Handle, record1Platform, record1Niche);
-        
+
         var record2Name = "List Influencer 2";
         var record2Handle = "@list2";
         var record2Platform = "TikTak";

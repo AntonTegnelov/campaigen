@@ -46,13 +46,13 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
     {
         // Arrange: Add a couple of records directly using the database helper
         var dbHelper = new DatabaseHelper(TestConnectionString);
-        
+
         var record1Amount = 50.00m;
         var record1Desc = "List Spend A";
         var record1Cat = "Cat A";
         var record1Date = DateTime.UtcNow.AddDays(-1).Date;
         await dbHelper.AddSpendRecordAsync(record1Amount, record1Desc, record1Cat, record1Date);
-        
+
         var record2Amount = 75.50m;
         var record2Desc = "List Spend B";
         var record2Cat = "Cat B";

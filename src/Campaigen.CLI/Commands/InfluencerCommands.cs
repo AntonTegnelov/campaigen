@@ -104,7 +104,7 @@ public static class InfluencerCommands
             {
                 // Call the service
                 var result = await _influencerService.CreateInfluencerAsync(dto);
-                
+
                 // Always print success message
                 Console.WriteLine("Influencer added successfully.");
                 return 0;
@@ -167,7 +167,7 @@ public static class InfluencerCommands
                 // Always display the headers
                 Console.WriteLine("\nID                                     Name                 Handle               Platform             Niche");
                 Console.WriteLine(new string('-', 100)); // Adjusted width
-                
+
                 if (influencers != null && influencers.Any())
                 {
                     foreach (var influencer in influencers)
