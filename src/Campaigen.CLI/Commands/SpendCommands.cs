@@ -119,7 +119,8 @@ public static class SpendCommands
                 var result = await _spendTrackingService.CreateSpendRecordAsync(dto);
                 if (result != null)
                 {
-                    Console.WriteLine($"Spend record created with ID: {result.Id}");
+                    // Console.WriteLine($"Spend record created with ID: {result.Id}");
+                    Console.WriteLine("Spend record added successfully."); // Use consistent success message
                     return 0; // Success exit code
                 }
                 else

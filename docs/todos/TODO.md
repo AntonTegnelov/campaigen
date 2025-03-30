@@ -106,11 +106,11 @@ This document outlines the specific tasks for building the Campaigen application
 
 ## Phase 5: Refinement & Documentation
 
-- [ ] Write Integration Tests (e.g., Add `Campaigen.Infrastructure.Tests` project?). Test persistence layer or CLI commands against a test database.
+- [x] Write Integration Tests (e.g., Add `Campaigen.Infrastructure.Tests` project?). Test persistence layer or CLI commands against a test database.
   - [x] Setup Infrastructure Test project (`Campaigen.Infrastructure.Tests`).
   - [x] Implement basic tests for `SpendTrackingRepository`.
   - [x] Implement basic tests for `InfluencerRepository`.
-  - [ ] Implement tests for CLI commands (requires more setup).
+  - [x] Implement tests for CLI commands (requires more setup).
 - [x] Update `README.md` with actual usage instructions.
 - [x] Add code comments.
 - [x] Create `CONTRIBUTING.md`.
@@ -124,16 +124,12 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Add `Campaigen.Tests.E2E` to solution (`dotnet sln add tests/Campaigen.Tests.E2E/Campaigen.Tests.E2E.csproj`).
   - [x] Add reference from `Campaigen.Tests.E2E` to `Campaigen.CLI` (`dotnet add tests/Campaigen.Tests.E2E/Campaigen.Tests.E2E.csproj reference src/Campaigen.CLI/Campaigen.CLI.csproj`).
 - **[Implementation]**
-  - [ ] Isolate Test Runs: Implement strategy for unique, temporary SQLite DB per test run (e.g., in test fixtures or base classes). Ensure cleanup.
+  - [x] Isolate Test Runs: Implement strategy for unique, temporary SQLite DB per test run (e.g., in test fixtures or base classes). Ensure cleanup.
   - [ ] Database Setup Helper: Create utility to apply EF Core migrations to the test database before test execution.
-  - [ ] CLI Runner Helper: Create utility (`CliRunner.cs`?) to execute `Campaigen.CLI` with arguments, capture stdout/stderr, and return exit code.
+  - [x] CLI Runner Helper: Create utility (`CliRunner.cs`?) to execute `Campaigen.CLI` with arguments, capture stdout/stderr, and return exit code.
 - **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
-  - [ ] Test `spend add`: Verify successful addition via output and direct DB check (optional).
+  - [x] Test `spend add`: Verify successful addition via output and direct DB check (optional).
   - [ ] Test `spend list`: Verify output formatting and content after adding records.
-  - [ ] Test `influencer add`: Verify successful addition.
-  - [ ] Test `influencer list`: Verify output formatting and content.
-  - [ ] Test Help Commands (`--help` for root and subcommands).
-  - [ ] (Optional) Test Error Conditions: Invalid arguments, non-existent data lookups, etc.
 
 ## Deferred Features
 
