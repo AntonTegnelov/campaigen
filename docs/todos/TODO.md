@@ -125,7 +125,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Add reference from `Campaigen.Tests.E2E` to `Campaigen.CLI` (`dotnet add tests/Campaigen.Tests.E2E/Campaigen.Tests.E2E.csproj reference src/Campaigen.CLI/Campaigen.CLI.csproj`).
 - **[Implementation]**
   - [x] Isolate Test Runs: Implement strategy for unique, temporary SQLite DB per test run (e.g., in test fixtures or base classes). Ensure cleanup.
-  - [ ] Database Setup Helper: Create utility to apply EF Core migrations to the test database before test execution.
+  - [x] Database Setup Helper: Create utility to apply EF Core migrations to the test database before test execution.
   - [x] CLI Runner Helper: Create utility (`CliRunner.cs`?) to execute `Campaigen.CLI` with arguments, capture stdout/stderr, and return exit code.
 - **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
   - [x] Test `spend add`: Verify successful addition via output and direct DB check (optional).
