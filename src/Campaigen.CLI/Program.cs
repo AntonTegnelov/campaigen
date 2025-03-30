@@ -24,7 +24,7 @@ await BuildCommandLine()
             host.ConfigureAppConfiguration((context, config) =>
             {
                 // Load configuration from appsettings.json and environment variables
-                config.SetBasePath(Directory.GetCurrentDirectory())
+                config.SetBasePath(AppContext.BaseDirectory)
                       .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                       .AddEnvironmentVariables();
             });
@@ -40,22 +40,20 @@ await BuildCommandLine()
                         b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
                 // Register Application Services & Repositories using Scoped lifetime
-                // Spend Tracking Feature
                 services.AddScoped<ISpendTrackingRepository, SpendTrackingRepository>();
                 services.AddScoped<ISpendTrackingService, SpendTrackingService>();
-
-                // Influencer Management Feature
                 services.AddScoped<IInfluencerRepository, InfluencerRepository>();
                 services.AddScoped<IInfluencerService, InfluencerService>();
 
-                // Add other application or infrastructure services here as needed
+                // Register Command Handlers for DI with the Host Builder
+                // No need to register them separately if using UseCommandHandler below
             });
 
             // Register command handlers with the host for DI
             // System.CommandLine.Hosting resolves the handler and injects dependencies
             host.UseCommandHandler<SpendCommands.AddSpendCommand, SpendCommands.AddSpendHandler>();
             host.UseCommandHandler<SpendCommands.ListSpendCommand, SpendCommands.ListSpendHandler>();
-            // host.UseCommandHandler<InfluencerCommands.AddInfluencerCommand, InfluencerCommands.AddInfluencerHandler>(); // Handler is set directly
+            host.UseCommandHandler<InfluencerCommands.AddInfluencerCommand, InfluencerCommands.AddInfluencerHandler>();
             host.UseCommandHandler<InfluencerCommands.ListInfluencerCommand, InfluencerCommands.ListInfluencerHandler>();
         })
     .UseDefaults() // Enable standard middleware like help, version, etc.
@@ -72,22 +70,18 @@ static CommandLineBuilder BuildCommandLine()
 
     // --- Spend Command --- //
     var spendCommand = new Command("spend", "Manage marketing spend records.");
-    // Build and add subcommands (add, list) from the SpendCommands class
     spendCommand.AddCommand(SpendCommands.BuildAddSpendCommand());
     spendCommand.AddCommand(SpendCommands.BuildListSpendCommand());
 
     // --- Influencer Command --- //
     var influencerCommand = new Command("influencer", "Manage influencer information.");
-    // Build and add subcommands (add, list) from the InfluencerCommands class
     influencerCommand.AddCommand(InfluencerCommands.BuildAddInfluencerCommand());
     influencerCommand.AddCommand(InfluencerCommands.BuildListInfluencerCommand());
 
-    // Add feature commands to the root command
     rootCommand.AddCommand(spendCommand);
     rootCommand.AddCommand(influencerCommand);
 
     return new CommandLineBuilder(rootCommand);
 }
 
-// Note: The original simple Console.WriteLine("Hello, World!"); has been replaced
-// by the System.CommandLine setup.
+// Note: Manual handler setting removed, reverting to UseCommandHandler

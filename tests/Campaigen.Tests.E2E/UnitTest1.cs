@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Campaigen.Core.Infrastructure.Persistence;
+using System.Globalization; // Add this for CultureInfo
 
 namespace Campaigen.Tests.E2E;
 
@@ -18,14 +19,21 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
     {
         // Arrange
         var amount = 123.45m;
-        var description = "Test spend item";
+        var description = "Test Spend Item";
         var category = "Test Category";
-        var date = DateTime.UtcNow.ToString("yyyy-MM-dd"); // Use consistent format
+        var date = DateTime.UtcNow.Date;
 
-        var arguments = $"spend add --amount {amount} --description \"{description}\" --category \"{category}\" --date {date}";
+        // Pass arguments as a string array
+        var args = new[] {
+            "spend", "add",
+            "--amount", amount.ToString(CultureInfo.InvariantCulture),
+            "--description", description,
+            "--category", category,
+            "--date", date.ToString("yyyy-MM-dd")
+        };
 
         // Act: Run the CLI command using the helper from the base class
-        var result = await RunCliAsync(arguments);
+        var result = await RunCliAsync(args);
 
         // Assert - CLI Output
         result.ExitCode.Should().Be(0, because: $"the command should execute successfully. Error: {result.StandardError}");
@@ -44,27 +52,29 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         addedRecord?.Amount.Should().Be(amount);
         addedRecord?.Category.Should().Be(category);
         // Use DateOnly comparison for date part if needed, or check for close enough date/time
-        addedRecord?.Date.Date.Should().Be(DateTime.Parse(date).Date);
+        addedRecord?.Date.Date.Should().Be(DateTime.Parse(date.ToString("yyyy-MM-dd")).Date);
     }
 
     [Fact]
     public async Task SpendList_WhenRecordsExist_ShouldDisplayRecordsInTableFormat()
     {
         // Arrange: Add a couple of records first
-        var record1Date = DateTime.UtcNow.AddDays(-1).ToString("yyyy-MM-dd");
-        var record1Desc = "List Test Item 1";
-        var record1Cat = "Category A";
-        var record1Amount = 50.75m;
-        await RunCliAsync($"spend add --amount {record1Amount} --description \"{record1Desc}\" --category \"{record1Cat}\" --date {record1Date}");
+        var record1Amount = 50.00m;
+        var record1Desc = "List Spend A";
+        var record1Cat = "Cat A";
+        var record1Date = DateTime.UtcNow.AddDays(-1).Date;
+        // Pass arguments as a string array
+        await RunCliAsync("spend", "add", "--amount", record1Amount.ToString(CultureInfo.InvariantCulture), "--description", record1Desc, "--category", record1Cat, "--date", record1Date.ToString("yyyy-MM-dd"));
 
-        var record2Date = DateTime.UtcNow.ToString("yyyy-MM-dd");
-        var record2Desc = "List Test Item 2";
-        var record2Cat = "Category B";
-        var record2Amount = 199.99m;
-        await RunCliAsync($"spend add --amount {record2Amount} --description \"{record2Desc}\" --category \"{record2Cat}\" --date {record2Date}");
+        var record2Amount = 75.50m;
+        var record2Desc = "List Spend B";
+        var record2Cat = "Cat B";
+        var record2Date = DateTime.UtcNow.Date;
+        // Pass arguments as a string array
+        await RunCliAsync("spend", "add", "--amount", record2Amount.ToString(CultureInfo.InvariantCulture), "--description", record2Desc, "--category", record2Cat, "--date", record2Date.ToString("yyyy-MM-dd"));
 
         // Act: Run the list command
-        var result = await RunCliAsync("spend list");
+        var result = await RunCliAsync("spend", "list");
 
         // Assert
         result.ExitCode.Should().Be(0, because: $"'spend list' should execute successfully. Error: {result.StandardError}");
@@ -85,18 +95,16 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         result.StandardOutput.Should().Contain(record2Desc, because: "the second record's description should be listed.");
         result.StandardOutput.Should().Contain(record2Cat, because: "the second record's category should be listed.");
         result.StandardOutput.Should().Contain(record2Amount.ToString("F2"), because: "the second record's amount should be listed formatted to 2 decimal places."); // Check formatted amount
-
     }
 
     [Theory]
-    [InlineData("--help")]
-    [InlineData("spend --help")]
-    [InlineData("spend add --help")]
-    [InlineData("spend list --help")]
-    public async Task HelpOption_ShouldDisplayHelpText(string helpArgument)
+    [InlineData("spend", "--help")]
+    [InlineData("spend", "add", "--help")]
+    [InlineData("spend", "list", "--help")]
+    public async Task HelpOption_ShouldDisplayHelpText(params string[] helpArgs)
     {
         // Arrange & Act
-        var result = await RunCliAsync(helpArgument);
+        var result = await RunCliAsync(helpArgs);
 
         // Assert
         result.ExitCode.Should().Be(0, because: $"requesting help should succeed. Error: {result.StandardError}");
@@ -107,10 +115,10 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
     }
 
     [Theory]
-    [InlineData("spend add --description \"Missing amount\"")] // Missing --amount
-    [InlineData("spend add --amount not_a_number --description \"Invalid amount\"")] // Invalid amount format
-    [InlineData("spend add --amount 100 --date not_a_date --description \"Invalid date\"")] // Invalid date format
-    public async Task SpendAdd_WithInvalidData_ShouldFailAndShowError(string arguments)
+    [InlineData("spend", "add", "--description", "Missing amount")] // Missing --amount
+    [InlineData("spend", "add", "--amount", "not_a_number", "--description", "Invalid amount")] // Invalid amount format
+    [InlineData("spend", "add", "--amount", "100", "--date", "not_a_date", "--description", "Invalid date")] // Invalid date format
+    public async Task SpendAdd_WithInvalidData_ShouldFailAndShowError(params string[] arguments)
     {
         // Arrange & Act
         var result = await RunCliAsync(arguments);

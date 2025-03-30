@@ -15,32 +15,13 @@ namespace Campaigen.CLI.Commands;
 public static class SpendCommands
 {
     /// <summary>
-    /// Builds the "spend add" command with its options.
+    /// Builds the "spend add" command.
     /// </summary>
     /// <returns>The configured "add" command.</returns>
     public static Command BuildAddSpendCommand()
     {
-        var amountOption = new Option<decimal>(
-            name: "--amount",
-            description: "The amount spent.")
-        { IsRequired = true };
-        var descriptionOption = new Option<string?>(
-            name: "--description",
-            description: "Description of the spend.");
-        var categoryOption = new Option<string?>(
-            name: "--category",
-            description: "Category of the spend.");
-        var dateOption = new Option<DateTime?>(
-            name: "--date",
-            description: "Date of the spend (defaults to today).");
-
-        var addCommand = new AddSpendCommand();
-        addCommand.AddOption(amountOption);
-        addCommand.AddOption(descriptionOption);
-        addCommand.AddOption(categoryOption);
-        addCommand.AddOption(dateOption);
-
-        return addCommand;
+        // Return instance of the command class, options are defined within it
+        return new AddSpendCommand();
     }
 
     /// <summary>
@@ -54,21 +35,33 @@ public static class SpendCommands
 
     /// <summary>
     /// Represents the command definition for "spend add".
-    /// Used for model binding command line arguments.
     /// </summary>
     public class AddSpendCommand : Command
     {
-        /// <summary>Initializes a new instance of the <see cref="AddSpendCommand"/> class.</summary>
-        public AddSpendCommand() : base("add", "Add a new spend record.") { }
+        // Define options directly within the command class
+        public Option<decimal> AmountOption { get; } = new Option<decimal>(
+            name: "--amount",
+            description: "The amount spent.")
+            { IsRequired = true };
+        public Option<string?> DescriptionOption { get; } = new Option<string?>(
+            name: "--description",
+            description: "Description of the spend.");
+        public Option<string?> CategoryOption { get; } = new Option<string?>(
+            name: "--category",
+            description: "Category of the spend.");
+        public Option<DateTime?> DateOption { get; } = new Option<DateTime?>(
+            name: "--date",
+            description: "Date of the spend (defaults to today).");
 
-        /// <summary>Gets or sets the amount spent.</summary>
-        public decimal Amount { get; set; }
-        /// <summary>Gets or sets the optional description.</summary>
-        public new string? Description { get; set; }
-        /// <summary>Gets or sets the optional category.</summary>
-        public string? Category { get; set; }
-        /// <summary>Gets or sets the optional date.</summary>
-        public DateTime? Date { get; set; }
+        /// <summary>Initializes a new instance of the <see cref="AddSpendCommand"/> class.</summary>
+        public AddSpendCommand() : base("add", "Add a new spend record.")
+        {
+            // Add the locally defined options
+            this.AddOption(AmountOption);
+            this.AddOption(DescriptionOption);
+            this.AddOption(CategoryOption);
+            this.AddOption(DateOption);
+        }
     }
 
     /// <summary>
@@ -78,16 +71,6 @@ public static class SpendCommands
     {
         private readonly ISpendTrackingService _spendTrackingService;
 
-        // Properties are bound from the command line arguments via the command definition
-        /// <summary>Gets or sets the amount spent.</summary>
-        public decimal Amount { get; set; }
-        /// <summary>Gets or sets the optional description.</summary>
-        public string? Description { get; set; }
-        /// <summary>Gets or sets the optional category.</summary>
-        public string? Category { get; set; }
-        /// <summary>Gets or sets the optional date.</summary>
-        public DateTime? Date { get; set; }
-
         /// <summary>Initializes a new instance of the <see cref="AddSpendHandler"/> class.</summary>
         /// <param name="spendTrackingService">The injected spend tracking service.</param>
         public AddSpendHandler(ISpendTrackingService spendTrackingService)
@@ -95,25 +78,33 @@ public static class SpendCommands
             _spendTrackingService = spendTrackingService;
         }
 
-        /// <summary>Invokes the handler synchronously (required by ICommandHandler).</summary>
+        /// <summary>Invokes the handler synchronously.</summary>
         public int Invoke(InvocationContext context)
         {
-            // Defer to the async version
             return InvokeAsync(context).GetAwaiter().GetResult();
         }
 
         /// <summary>Invokes the handler asynchronously.</summary>
         public async Task<int> InvokeAsync(InvocationContext context)
         {
+            // Get the command instance to access its options
+            var command = (AddSpendCommand)context.ParseResult.CommandResult.Command;
+
+            // Get option values directly from the ParseResult
+            var amount = context.ParseResult.GetValueForOption(command.AmountOption);
+            var description = context.ParseResult.GetValueForOption(command.DescriptionOption);
+            var category = context.ParseResult.GetValueForOption(command.CategoryOption);
+            var date = context.ParseResult.GetValueForOption(command.DateOption);
+
             var dto = new CreateSpendRecordDto
             {
-                Amount = Amount,
-                Description = Description,
-                Category = Category,
-                Date = Date ?? DateTime.UtcNow // Default to UtcNow if date not provided
+                Amount = amount, // Use value obtained directly
+                Description = description,
+                Category = category,
+                Date = date ?? DateTime.UtcNow // Default to UtcNow if date not provided
             };
 
-            Console.WriteLine($"Adding spend: Amount={dto.Amount}, Desc={dto.Description ?? "N/A"}, Cat={dto.Category ?? "N/A"}, Date={dto.Date:yyyy-MM-dd}");
+            Console.WriteLine($"Adding spend (Direct Parse): Amount={dto.Amount}, Desc={dto.Description ?? "N/A"}, Cat={dto.Category ?? "N/A"}, Date={dto.Date:yyyy-MM-dd}");
             try
             {
                 var result = await _spendTrackingService.CreateSpendRecordAsync(dto);

@@ -16,16 +16,23 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
     public async Task InfluencerAdd_WithValidData_ShouldSucceedAndAddRecord()
     {
         // Arrange
+        // Revert to name with spaces
         var name = "Test Influencer";
         var handle = "@testinfluencer";
         var platform = "TestPlatform";
         var niche = "Testing";
 
-        // Ensure arguments are quoted correctly for the CLI runner
-        var arguments = $"influencer add --influencer-name \"{name}\" --handle \"{handle}\" --platform \"{platform}\" --niche \"{niche}\"";
+        // Pass arguments as a string array
+        var args = new[] {
+            "influencer", "add",
+            "--influencer-name", name,
+            "--handle", handle,
+            "--platform", platform,
+            "--niche", niche
+        };
 
         // Act: Run the CLI command using the helper from the base class
-        var result = await RunCliAsync(arguments);
+        var result = await RunCliAsync(args);
 
         // Assert - CLI Output
         result.ExitCode.Should().Be(0, because: $"the command should execute successfully. Error: {result.StandardError}");
@@ -49,22 +56,23 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
     public async Task InfluencerList_WhenRecordsExist_ShouldDisplayRecordsInTableFormat()
     {
         // Arrange: Add a couple of records first
+        // Revert to names with spaces
         var record1Name = "List Influencer 1";
         var record1Handle = "@list1";
         var record1Platform = "Insta";
         var record1Niche = "List Niche A";
-        // Note: This test is currently expected to fail because influencer add is blocked
-        await RunCliAsync($"influencer add --influencer-name \"{record1Name}\" --handle \"{record1Handle}\" --platform \"{record1Platform}\" --niche \"{record1Niche}\"");
+        // Pass arguments as a string array
+        await RunCliAsync("influencer", "add", "--influencer-name", record1Name, "--handle", record1Handle, "--platform", record1Platform, "--niche", record1Niche);
 
         var record2Name = "List Influencer 2";
         var record2Handle = "@list2";
         var record2Platform = "TikTak";
         var record2Niche = "List Niche B";
-        // Note: This test is currently expected to fail because influencer add is blocked
-        await RunCliAsync($"influencer add --influencer-name \"{record2Name}\" --handle \"{record2Handle}\" --platform \"{record2Platform}\" --niche \"{record2Niche}\"");
+        // Pass arguments as a string array
+        await RunCliAsync("influencer", "add", "--influencer-name", record2Name, "--handle", record2Handle, "--platform", record2Platform, "--niche", record2Niche);
 
         // Act: Run the list command
-        var result = await RunCliAsync("influencer list");
+        var result = await RunCliAsync("influencer", "list");
 
         // Assert
         result.ExitCode.Should().Be(0, because: $"'influencer list' should execute successfully. Error: {result.StandardError}");
@@ -90,13 +98,13 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
     }
 
     [Theory]
-    [InlineData("influencer --help")]
-    [InlineData("influencer add --help")]
-    [InlineData("influencer list --help")]
-    public async Task HelpOption_ShouldDisplayHelpText(string helpArgument)
+    [InlineData("influencer", "--help")]
+    [InlineData("influencer", "add", "--help")]
+    [InlineData("influencer", "list", "--help")]
+    public async Task HelpOption_ShouldDisplayHelpText(params string[] helpArgs)
     {
         // Arrange & Act
-        var result = await RunCliAsync(helpArgument);
+        var result = await RunCliAsync(helpArgs);
 
         // Assert
         result.ExitCode.Should().Be(0, because: $"requesting help should succeed. Error: {result.StandardError}");
@@ -107,4 +115,4 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
     }
 
     // TODO: Add tests for invalid input scenarios
-} 
+}

@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq; // Needed for Split and Skip
 
 namespace Campaigen.Tests.E2E
 {
@@ -29,53 +31,48 @@ namespace Campaigen.Tests.E2E
     /// </summary>
     public static class CliRunner
     {
-        // Path to the CLI executable relative to the test project output directory
-        // Adjust this path based on your build output structure.
-        // Common structure: E2E tests are in tests/..., CLI output is in src/.../bin/...
-        // Example: ..\..\..\..\src\Campaigen.CLI\bin\Debug\net8.0\Campaigen.CLI.exe (Windows)
-        // Example: ../../../../src/Campaigen.CLI/bin/Debug/net8.0/Campaigen.CLI (Linux/macOS)
-        private static readonly string CliExecutablePath = Path.Combine(
-            AppContext.BaseDirectory, // Start from tests/Project/bin/Debug/net8.0
-            "..", // bin/Debug
-            "..", // bin
-            "..", // tests/Project
-            "..", // tests
-            "..", // Workspace Root
-            "src", "Campaigen.CLI", "bin",
-#if DEBUG
-            "Debug",
-#else
-            "Release",
-#endif
-            "net8.0", // Adjust target framework if needed
-            "Campaigen.CLI.exe" // Change to "Campaigen.CLI" for Linux/macOS
-        );
-
-
         /// <summary>
-        /// Runs the CLI application with the specified arguments.
+        /// Runs the CLI application with the specified arguments using the compiled DLL.
         /// </summary>
-        /// <param name="arguments">The command-line arguments to pass to the CLI.</param>
+        /// <param name="args">The command-line arguments (pre-split) to pass to the CLI.</param>
         /// <param name="environmentVariables">Optional environment variables to set for the process.</param>
         /// <returns>A CliResult containing the exit code and captured output.</returns>
-        public static async Task<CliResult> RunAsync(string arguments, Dictionary<string, string>? environmentVariables = null)
+        public static async Task<CliResult> RunAsync(string[] args, Dictionary<string, string>? environmentVariables = null)
         {
-            if (!File.Exists(CliExecutablePath))
+            // Calculate paths relative to the current test execution directory
+            // IMPORTANT: This assumes a standard 'Debug' build configuration for tests.
+            // Adjust if using 'Release' or other configurations.
+            var solutionRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+            var cliProjectDir = Path.Combine(solutionRoot, "src", "Campaigen.CLI");
+            var cliDllPath = Path.Combine(cliProjectDir, "bin", "Debug", "net8.0", "Campaigen.CLI.dll"); // Adjust net8.0 if needed
+
+            // Old path for dotnet run:
+            // var cliProjectPath = Path.Combine(cliProjectDir, "Campaigen.CLI.csproj");
+
+            if (!File.Exists(cliDllPath))
             {
-                throw new FileNotFoundException($"CLI executable not found at expected path: {Path.GetFullPath(CliExecutablePath)}. " +
-                                                "Ensure the Campaigen.CLI project is built and the path in CliRunner.cs is correct.");
+                throw new FileNotFoundException($"CLI DLL not found at expected path: {cliDllPath}. " +
+                                                "Ensure the project is built in Debug configuration and the path calculation in CliRunner.cs is correct.");
             }
 
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = CliExecutablePath,
-                Arguments = arguments,
+                FileName = "dotnet",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                WorkingDirectory = Path.GetDirectoryName(CliExecutablePath) ?? AppContext.BaseDirectory // Run from CLI output dir
+                WorkingDirectory = cliProjectDir
             };
+
+            // Use ArgumentList for robustness
+            processStartInfo.ArgumentList.Add(cliDllPath); // Add DLL path first
+
+            // Add pre-split arguments from the input array
+            foreach (var arg in args)
+            {
+                processStartInfo.ArgumentList.Add(arg);
+            }
 
             // Set environment variables if provided
             if (environmentVariables != null)
@@ -135,4 +132,4 @@ namespace Campaigen.Tests.E2E
             return new CliResult(process.ExitCode, outputBuilder.ToString().TrimEnd(), errorBuilder.ToString().TrimEnd());
         }
     }
-} 
+}

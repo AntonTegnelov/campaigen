@@ -68,9 +68,9 @@ public abstract class E2ETestBase : IDisposable
     /// <summary>
     /// Runs the CLI with the test-specific environment variables (incl. connection string).
     /// </summary>
-    protected async Task<CliResult> RunCliAsync(string arguments)
+    protected async Task<CliResult> RunCliAsync(params string[] args)
     {
-        return await CliRunner.RunAsync(arguments, TestEnvironmentVariables);
+        return await CliRunner.RunAsync(args, TestEnvironmentVariables);
     }
 
     /// <summary>
@@ -125,4 +125,4 @@ public abstract class E2ETestBase : IDisposable
     {
         Dispose(false);
     }
-} 
+}
