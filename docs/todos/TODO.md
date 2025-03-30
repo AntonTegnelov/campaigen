@@ -132,6 +132,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Test `spend list`: Verify output formatting and content after adding records.
   - [ ] Test `influencer add`: Verify successful addition. (Blocked by parsing issue)
   - [ ] Test `influencer list`: Verify output formatting and content. (Blocked by `influencer add`)
+  - [x] Test Help Commands (`--help` for root and subcommands).
 
 ## Deferred Features
 

@@ -53,12 +53,14 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         var record1Handle = "@list1";
         var record1Platform = "Insta";
         var record1Niche = "List Niche A";
+        // Note: This test is currently expected to fail because influencer add is blocked
         await RunCliAsync($"influencer add --influencer-name \"{record1Name}\" --handle \"{record1Handle}\" --platform \"{record1Platform}\" --niche \"{record1Niche}\"");
 
         var record2Name = "List Influencer 2";
         var record2Handle = "@list2";
         var record2Platform = "TikTak";
         var record2Niche = "List Niche B";
+        // Note: This test is currently expected to fail because influencer add is blocked
         await RunCliAsync($"influencer add --influencer-name \"{record2Name}\" --handle \"{record2Handle}\" --platform \"{record2Platform}\" --niche \"{record2Niche}\"");
 
         // Act: Run the list command
@@ -75,7 +77,7 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         result.StandardOutput.Should().Contain("Platform", because: "the output table should have a Platform header.");
         result.StandardOutput.Should().Contain("Niche", because: "the output table should have a Niche header.");
 
-        // Check for specific record details
+        // Check for specific record details (These will fail if add fails)
         result.StandardOutput.Should().Contain(record1Name, because: "the first record's name should be listed.");
         result.StandardOutput.Should().Contain(record1Handle, because: "the first record's handle should be listed.");
         result.StandardOutput.Should().Contain(record1Platform, because: "the first record's platform should be listed.");
@@ -85,6 +87,23 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         result.StandardOutput.Should().Contain(record2Handle, because: "the second record's handle should be listed.");
         result.StandardOutput.Should().Contain(record2Platform, because: "the second record's platform should be listed.");
         result.StandardOutput.Should().Contain(record2Niche, because: "the second record's niche should be listed.");
+    }
+
+    [Theory]
+    [InlineData("influencer --help")]
+    [InlineData("influencer add --help")]
+    [InlineData("influencer list --help")]
+    public async Task HelpOption_ShouldDisplayHelpText(string helpArgument)
+    {
+        // Arrange & Act
+        var result = await RunCliAsync(helpArgument);
+
+        // Assert
+        result.ExitCode.Should().Be(0, because: $"requesting help should succeed. Error: {result.StandardError}");
+        result.StandardError.Should().BeEmpty(because: "requesting help should not produce errors.");
+        result.StandardOutput.Should().Contain("Usage:", because: "help text should include usage information.");
+        result.StandardOutput.Should().Contain("Options:", because: "help text should include options information.");
+        result.StandardOutput.Should().Contain("--help", because: "help text should mention the help option.");
     }
 
     // TODO: Add tests for invalid input scenarios

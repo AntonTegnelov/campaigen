@@ -88,6 +88,23 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
 
     }
 
-    // TODO: Add test for 'spend list'
+    [Theory]
+    [InlineData("--help")]
+    [InlineData("spend --help")]
+    [InlineData("spend add --help")]
+    [InlineData("spend list --help")]
+    public async Task HelpOption_ShouldDisplayHelpText(string helpArgument)
+    {
+        // Arrange & Act
+        var result = await RunCliAsync(helpArgument);
+
+        // Assert
+        result.ExitCode.Should().Be(0, because: $"requesting help should succeed. Error: {result.StandardError}");
+        result.StandardError.Should().BeEmpty(because: "requesting help should not produce errors.");
+        result.StandardOutput.Should().Contain("Usage:", because: "help text should include usage information.");
+        result.StandardOutput.Should().Contain("Options:", because: "help text should include options information.");
+        result.StandardOutput.Should().Contain("--help", because: "help text should mention the help option.");
+    }
+
     // TODO: Add tests for invalid input scenarios (missing arguments, wrong format, etc.)
 }
