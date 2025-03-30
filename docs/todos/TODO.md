@@ -107,6 +107,10 @@ This document outlines the specific tasks for building the Campaigen application
 ## Phase 5: Refinement & Documentation
 
 - [ ] Write Integration Tests (e.g., Add `Campaigen.Infrastructure.Tests` project?). Test persistence layer or CLI commands against a test database.
+  - [x] Setup Infrastructure Test project (`Campaigen.Infrastructure.Tests`).
+  - [x] Implement basic tests for `SpendTrackingRepository`.
+  - [ ] Implement basic tests for `InfluencerRepository`.
+  - [ ] Implement tests for CLI commands (requires more setup).
 - [ ] Update `README.md` with actual usage instructions.
 - [ ] Add code comments.
 - [ ] Create `CONTRIBUTING.md`.
