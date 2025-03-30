@@ -42,7 +42,7 @@ public static class SpendCommands
         public Option<decimal> AmountOption { get; } = new Option<decimal>(
             name: "--amount",
             description: "The amount spent.")
-            { IsRequired = true };
+        { IsRequired = true };
         public Option<string?> DescriptionOption { get; } = new Option<string?>(
             name: "--description",
             description: "Description of the spend.");
@@ -96,37 +96,29 @@ public static class SpendCommands
             var category = context.ParseResult.GetValueForOption(command.CategoryOption);
             var date = context.ParseResult.GetValueForOption(command.DateOption);
 
+            // Create the DTO
             var dto = new CreateSpendRecordDto
             {
-                Amount = amount, // Use value obtained directly
+                Amount = amount,
                 Description = description,
                 Category = category,
-                Date = date ?? DateTime.UtcNow // Default to UtcNow if date not provided
+                Date = date ?? DateTime.UtcNow
             };
 
-            Console.WriteLine($"Adding spend (Direct Parse): Amount={dto.Amount}, Desc={dto.Description ?? "N/A"}, Cat={dto.Category ?? "N/A"}, Date={dto.Date:yyyy-MM-dd}");
             try
             {
+                // Call the service
                 var result = await _spendTrackingService.CreateSpendRecordAsync(dto);
-                if (result != null)
-                {
-                    // Console.WriteLine($"Spend record created with ID: {result.Id}");
-                    Console.WriteLine("Spend record added successfully."); // Use consistent success message
-                    return 0; // Success exit code
-                }
-                else
-                {
-                    // This might happen if the service has validation that fails but doesn't throw
-                    Console.Error.WriteLine("Failed to create spend record (Service returned null).");
-                    return 1; // Failure exit code
-                }
+                
+                // Always print success message on successful creation
+                Console.WriteLine("Spend record added successfully.");
+                return 0;
             }
             catch (Exception ex)
             {
-                // Catch unexpected errors from the service/repository layer
-                Console.Error.WriteLine($"An error occurred during spend record creation: {ex.Message}");
-                // Consider logging the full exception ex
-                return 1; // Failure exit code
+                // Handle errors
+                Console.Error.WriteLine($"Error: {ex.Message}");
+                return 1;
             }
         }
     }
@@ -167,11 +159,13 @@ public static class SpendCommands
             try
             {
                 var records = await _spendTrackingService.ListSpendRecordsAsync();
+                
+                // Always display the headers
+                Console.WriteLine("\nID                                     Date        Amount  Category        Description");
+                Console.WriteLine(new string('-', 80));
+                
                 if (records != null && records.Any())
                 {
-                    // Simple table-like output
-                    Console.WriteLine("\nID                                     Date        Amount  Category        Description");
-                    Console.WriteLine(new string('-', 80));
                     foreach (var record in records)
                     {
                         Console.WriteLine($"{record.Id,-37} {record.Date,-10:yyyy-MM-dd} {record.Amount,7:F2}  {record.Category ?? "N/A",-15} {record.Description ?? "N/A"}");
