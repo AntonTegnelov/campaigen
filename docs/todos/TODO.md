@@ -102,7 +102,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Implement `influencer list` command - Inject `IInfluencerService`, call service methods asynchronously, display results from `InfluencerDto` list.
   - [x] Register influencer commands with `RootCommand` in `Program.cs`.
 - **[Usability]**
-  - [ ] Implement basic error handling and user feedback (interact only with Application layer services).
+  - [x] Implement basic error handling and user feedback (interact only with Application layer services).
 
 ## Phase 5: Refinement & Documentation
 
