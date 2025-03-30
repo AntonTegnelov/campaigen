@@ -44,7 +44,7 @@ public class CliIntegrationTests : IDisposable
                 }
                 return; // Exit if successful
             }
-            catch (IOException ex) when (i < 2)
+            catch (IOException) when (i < 2)
             {
                 // Log or print warning on failed attempts (optional)
                 // Console.WriteLine($"Warning: Attempt {i + 1} failed to delete test DB {_testDbPath}. Retrying... Error: {ex.Message}");
@@ -52,9 +52,9 @@ public class CliIntegrationTests : IDisposable
             }
             catch (Exception ex)
             {
-                 // Log or handle unexpected exceptions during delete
-                 Console.WriteLine($"Error deleting test DB {_testDbPath}: {ex.Message}");
-                 break; // Don't retry on other exceptions
+                // Log or handle unexpected exceptions during delete
+                Console.WriteLine($"Error deleting test DB {_testDbPath}: {ex.Message}");
+                break; // Don't retry on other exceptions
             }
         }
         GC.SuppressFinalize(this);
@@ -129,7 +129,7 @@ public class CliIntegrationTests : IDisposable
         {
             FileName = "dotnet",
             // Use quoted arguments
-            Arguments = $"{cliDllPath} {string.Join(" ", quotedArgs)}", 
+            Arguments = $"{cliDllPath} {string.Join(" ", quotedArgs)}",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -225,4 +225,4 @@ public class CliIntegrationTests : IDisposable
 
     // TODO: Add tests for Influencer commands (add, list)
     // TODO: Add tests for error cases (e.g., missing required arguments, invalid data)
-} 
+}

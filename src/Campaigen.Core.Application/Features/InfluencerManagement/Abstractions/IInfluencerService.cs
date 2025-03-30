@@ -30,4 +30,4 @@ public interface IInfluencerService
     Task<IEnumerable<InfluencerDto>> ListInfluencersAsync();
 
     // TODO: Define Update and Delete service methods if business logic requires them.
-} 
+}

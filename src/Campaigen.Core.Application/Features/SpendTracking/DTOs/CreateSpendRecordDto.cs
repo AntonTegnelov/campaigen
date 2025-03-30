@@ -27,4 +27,4 @@ public class CreateSpendRecordDto
     public string? Category { get; set; }
 
     // TODO: Consider adding validation attributes (e.g., [Required], [Range]) using System.ComponentModel.DataAnnotations
-} 
+}

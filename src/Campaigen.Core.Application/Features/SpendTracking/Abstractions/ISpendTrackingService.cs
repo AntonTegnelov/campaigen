@@ -31,4 +31,4 @@ public interface ISpendTrackingService
 
     // TODO: Define Update and Delete service methods if business logic requires them
     // (e.g., validation, specific mapping, event publishing before/after persistence).
-} 
+}

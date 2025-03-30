@@ -116,4 +116,4 @@ public class SpendTrackingServiceTests
             r.Description == createDto.Description &&
             r.Category == createDto.Category)), Times.Once);
     }
-} 
+}

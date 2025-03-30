@@ -41,4 +41,4 @@ public interface ISpendTrackingRepository
     /// <param name="id">The unique identifier of the spend record to delete.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task DeleteAsync(Guid id);
-} 
+}

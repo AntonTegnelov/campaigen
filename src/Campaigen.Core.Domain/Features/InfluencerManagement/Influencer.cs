@@ -31,4 +31,4 @@ public class Influencer
     public string? Niche { get; set; }
 
     // TODO: Consider adding more properties like contact info, engagement rates, etc.
-} 
+}

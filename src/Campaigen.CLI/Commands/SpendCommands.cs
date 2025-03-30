@@ -22,7 +22,8 @@ public static class SpendCommands
     {
         var amountOption = new Option<decimal>(
             name: "--amount",
-            description: "The amount spent.") { IsRequired = true };
+            description: "The amount spent.")
+        { IsRequired = true };
         var descriptionOption = new Option<string?>(
             name: "--description",
             description: "Description of the spend.");
@@ -192,10 +193,10 @@ public static class SpendCommands
             }
             catch (Exception ex)
             {
-                 Console.Error.WriteLine($"An error occurred while listing spend records: {ex.Message}");
-                 // Consider logging the full exception ex
-                 return 1; // Failure
+                Console.Error.WriteLine($"An error occurred while listing spend records: {ex.Message}");
+                // Consider logging the full exception ex
+                return 1; // Failure
             }
         }
     }
-} 
+}

@@ -30,4 +30,4 @@ public class InfluencerDto
     /// Influencer's niche.
     /// </summary>
     public string? Niche { get; set; }
-} 
+}

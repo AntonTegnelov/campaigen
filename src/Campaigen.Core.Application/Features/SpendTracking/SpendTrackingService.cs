@@ -72,4 +72,4 @@ public class SpendTrackingService : ISpendTrackingService
             Category = spendRecord.Category
         };
     }
-} 
+}

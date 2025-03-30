@@ -30,4 +30,4 @@ public class SpendRecordDto
     /// Optional category.
     /// </summary>
     public string? Category { get; set; }
-} 
+}

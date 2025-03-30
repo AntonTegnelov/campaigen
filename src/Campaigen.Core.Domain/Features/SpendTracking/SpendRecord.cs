@@ -29,4 +29,4 @@ public class SpendRecord
     /// Optional category for the spend (e.g., Advertising, Software, Travel).
     /// </summary>
     public string? Category { get; set; }
-} 
+}

@@ -22,7 +22,8 @@ public static class InfluencerCommands
     {
         var nameOption = new Option<string>(
             name: "--name",
-            description: "The name of the influencer.") { IsRequired = true };
+            description: "The name of the influencer.")
+        { IsRequired = true };
         var handleOption = new Option<string?>(
             name: "--handle",
             description: "The influencer's social media handle.");
@@ -196,4 +197,4 @@ public static class InfluencerCommands
             }
         }
     }
-} 
+}

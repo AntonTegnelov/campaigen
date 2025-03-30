@@ -40,4 +40,4 @@ public class AppDbContext : DbContext
     //     // Configure entity relationships, constraints, value conversions, etc. here.
     //     // Example: modelBuilder.Entity<SpendRecord>().Property(p => p.Amount).HasPrecision(18, 2);
     // }
-} 
+}

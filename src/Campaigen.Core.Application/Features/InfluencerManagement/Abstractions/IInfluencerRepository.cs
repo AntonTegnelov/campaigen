@@ -41,4 +41,4 @@ public interface IInfluencerRepository
     /// <param name="id">The unique identifier of the influencer to delete.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task DeleteAsync(Guid id);
-} 
+}

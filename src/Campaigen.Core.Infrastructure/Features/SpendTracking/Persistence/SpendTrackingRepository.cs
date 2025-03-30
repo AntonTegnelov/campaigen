@@ -70,4 +70,4 @@ public class SpendTrackingRepository : ISpendTrackingRepository
         await _context.SaveChangesAsync();
         // Consider adding concurrency conflict handling (e.g., try-catch DbUpdateConcurrencyException).
     }
-} 
+}

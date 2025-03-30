@@ -27,4 +27,4 @@ public class CreateInfluencerDto
     public string? Niche { get; set; }
 
     // TODO: Consider adding validation attributes (e.g., [Required]) using System.ComponentModel.DataAnnotations
-} 
+}
