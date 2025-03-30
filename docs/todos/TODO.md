@@ -86,7 +86,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Register `IInfluencerRepository` -> `InfluencerRepository`.
   - [x] Register `IInfluencerService` -> `InfluencerService`.
 - **[Unit Tests]** (`tests/Campaigen.Application.Tests/Features/InfluencerManagement`)
-  - [ ] Write unit tests for `InfluencerService`.
+  - [x] Write unit tests for `InfluencerService`.
 
 ## Phase 4: Command-Line Interface (`Campaigen.CLI`)
 
@@ -94,7 +94,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Install CLI Framework (`System.CommandLine`) (`dotnet add src/Campaigen.CLI/Campaigen.CLI.csproj package System.CommandLine`).
   - [x] Configure `System.CommandLine` basic setup in `src/Campaigen.CLI/Program.cs` (RootCommand, DI integration).
 - **[Spend Tracking Commands]** (`src/Campaigen.CLI/Commands/SpendCommands.cs` or similar)
-  - [ ] Implement `spend add` command - Inject `ISpendTrackingService`, call service methods asynchronously, use `CreateSpendRecordDto`.
+  - [x] Implement `spend add` command - Inject `ISpendTrackingService`, call service methods asynchronously, use `CreateSpendRecordDto`.
   - [ ] Implement `spend list` command - Inject `ISpendTrackingService`, call service methods asynchronously, display results from `SpendRecordDto` list.
   - [x] Register spend commands with `RootCommand` in `Program.cs`.
 - **[Influencer Management Commands]** (`src/Campaigen.CLI/Commands/InfluencerCommands.cs` or similar)
