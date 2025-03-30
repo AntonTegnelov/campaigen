@@ -112,7 +112,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Implement basic tests for `InfluencerRepository`.
   - [ ] Implement tests for CLI commands (requires more setup).
 - [x] Update `README.md` with actual usage instructions.
-- [ ] Add code comments.
+- [x] Add code comments.
 - [ ] Create `CONTRIBUTING.md`.
 - [ ] Choose and Add a `LICENSE` file.
 - [ ] Set up basic CI/CD pipeline (Build & Test).
