@@ -45,6 +45,47 @@ public class InfluencerCommandsTests : E2ETestBase // Inherit from the base clas
         addedRecord?.Niche.Should().Be(niche);
     }
 
-    // TODO: Add test for 'influencer list'
+    [Fact]
+    public async Task InfluencerList_WhenRecordsExist_ShouldDisplayRecordsInTableFormat()
+    {
+        // Arrange: Add a couple of records first
+        var record1Name = "List Influencer 1";
+        var record1Handle = "@list1";
+        var record1Platform = "Insta";
+        var record1Niche = "List Niche A";
+        await RunCliAsync($"influencer add --influencer-name \"{record1Name}\" --handle \"{record1Handle}\" --platform \"{record1Platform}\" --niche \"{record1Niche}\"");
+
+        var record2Name = "List Influencer 2";
+        var record2Handle = "@list2";
+        var record2Platform = "TikTak";
+        var record2Niche = "List Niche B";
+        await RunCliAsync($"influencer add --influencer-name \"{record2Name}\" --handle \"{record2Handle}\" --platform \"{record2Platform}\" --niche \"{record2Niche}\"");
+
+        // Act: Run the list command
+        var result = await RunCliAsync("influencer list");
+
+        // Assert
+        result.ExitCode.Should().Be(0, because: $"'influencer list' should execute successfully. Error: {result.StandardError}");
+        result.StandardError.Should().BeEmpty(because: "no errors should occur when listing.");
+
+        // Verify headers
+        result.StandardOutput.Should().Contain("ID", because: "the output table should have an ID header.");
+        result.StandardOutput.Should().Contain("Name", because: "the output table should have a Name header.");
+        result.StandardOutput.Should().Contain("Handle", because: "the output table should have a Handle header.");
+        result.StandardOutput.Should().Contain("Platform", because: "the output table should have a Platform header.");
+        result.StandardOutput.Should().Contain("Niche", because: "the output table should have a Niche header.");
+
+        // Check for specific record details
+        result.StandardOutput.Should().Contain(record1Name, because: "the first record's name should be listed.");
+        result.StandardOutput.Should().Contain(record1Handle, because: "the first record's handle should be listed.");
+        result.StandardOutput.Should().Contain(record1Platform, because: "the first record's platform should be listed.");
+        result.StandardOutput.Should().Contain(record1Niche, because: "the first record's niche should be listed.");
+
+        result.StandardOutput.Should().Contain(record2Name, because: "the second record's name should be listed.");
+        result.StandardOutput.Should().Contain(record2Handle, because: "the second record's handle should be listed.");
+        result.StandardOutput.Should().Contain(record2Platform, because: "the second record's platform should be listed.");
+        result.StandardOutput.Should().Contain(record2Niche, because: "the second record's niche should be listed.");
+    }
+
     // TODO: Add tests for invalid input scenarios
 } 

@@ -130,6 +130,8 @@ This document outlines the specific tasks for building the Campaigen application
 - **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
   - [x] Test `spend add`: Verify successful addition via output and direct DB check (optional).
   - [x] Test `spend list`: Verify output formatting and content after adding records.
+  - [ ] Test `influencer add`: Verify successful addition. (Blocked by parsing issue)
+  - [ ] Test `influencer list`: Verify output formatting and content. (Blocked by `influencer add`)
 
 ## Deferred Features
 
