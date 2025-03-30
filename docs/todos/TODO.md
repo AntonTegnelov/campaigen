@@ -130,8 +130,8 @@ This document outlines the specific tasks for building the Campaigen application
 - **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
   - [x] Test `spend add`: Verify successful addition via output and direct DB check (optional).
   - [x] Test `spend list`: Verify output formatting and content after adding records.
-  - [ ] Test `influencer add`: Verify successful addition. (Blocked by parsing issue)
-  - [ ] Test `influencer list`: Verify output formatting and content. (Blocked by `influencer add`)
+  - [x] Test `influencer add`: Verify successful addition. (Blocked by parsing issue, workaround implemented)
+  - [x] Test `influencer list`: Verify output formatting and content. (Fixed by using DatabaseHelper)
   - [x] Test Help Commands (`--help` for root and subcommands).
   - [x] (Optional) Test Error Conditions: Invalid arguments (spend add tested), non-existent data lookups, etc. (Other commands TBD)
 
