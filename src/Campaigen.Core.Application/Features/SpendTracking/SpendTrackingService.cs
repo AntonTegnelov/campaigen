@@ -1,5 +1,7 @@
 using Campaigen.Core.Application.Features.SpendTracking.Abstractions;
 using Campaigen.Core.Application.Features.SpendTracking.DTOs;
+using Campaigen.Core.Domain.Features.SpendTracking;
+using System.Linq;
 
 namespace Campaigen.Core.Application.Features.SpendTracking;
 
@@ -12,21 +14,43 @@ public class SpendTrackingService : ISpendTrackingService
         _spendTrackingRepository = spendTrackingRepository;
     }
 
-    public Task<SpendRecordDto?> CreateSpendRecordAsync(CreateSpendRecordDto dto)
+    public async Task<SpendRecordDto?> CreateSpendRecordAsync(CreateSpendRecordDto dto)
     {
-        // Implementation using repository and mapping
-        throw new NotImplementedException();
+        var spendRecord = new SpendRecord
+        {
+            Id = Guid.NewGuid(),
+            Date = dto.Date,
+            Amount = dto.Amount,
+            Description = dto.Description,
+            Category = dto.Category
+        };
+
+        await _spendTrackingRepository.AddAsync(spendRecord);
+
+        return MapToDto(spendRecord);
     }
 
-    public Task<SpendRecordDto?> GetSpendRecordAsync(Guid id)
+    public async Task<SpendRecordDto?> GetSpendRecordAsync(Guid id)
     {
-        // Implementation using repository and mapping
-        throw new NotImplementedException();
+        var spendRecord = await _spendTrackingRepository.GetByIdAsync(id);
+        return spendRecord == null ? null : MapToDto(spendRecord);
     }
 
-    public Task<IEnumerable<SpendRecordDto>> ListSpendRecordsAsync()
+    public async Task<IEnumerable<SpendRecordDto>> ListSpendRecordsAsync()
     {
-        // Implementation using repository and mapping
-        throw new NotImplementedException();
+        var spendRecords = await _spendTrackingRepository.GetAllAsync();
+        return spendRecords.Select(MapToDto);
+    }
+
+    private static SpendRecordDto MapToDto(SpendRecord spendRecord)
+    {
+        return new SpendRecordDto
+        {
+            Id = spendRecord.Id,
+            Date = spendRecord.Date,
+            Amount = spendRecord.Amount,
+            Description = spendRecord.Description,
+            Category = spendRecord.Category
+        };
     }
 } 

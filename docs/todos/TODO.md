@@ -42,29 +42,29 @@ This document outlines the specific tasks for building the Campaigen application
 - **[Setup - Initial Migration]**
   - [x] Create initial EF Core Migration (`dotnet ef migrations add InitialCreate --project src/Campaigen.Core.Infrastructure --startup-project src/Campaigen.CLI`). _(Run from workspace root)_
 - **[Setup - Git]**
-  - [ ] Initialize Git repository (`git init`, initial commit).
+  - [x] Initialize Git repository (`git init`, initial commit).
 
 ## Phase 2: Feature - Marketing Spend Tracking
 
 - **[Domain]** (`src/Campaigen.Core.Domain/Features/SpendTracking`)
-  - [ ] Define `SpendRecord` entity (`SpendRecord.cs`) - Properties: Id, Date, Amount, Description, Category. (Keep POCOs clean, no infrastructure concerns).
+  - [x] Define `SpendRecord` entity (`SpendRecord.cs`) - Properties: Id, Date, Amount, Description, Category. (Keep POCOs clean, no infrastructure concerns).
 - **[Application - Abstractions]** (`src/Campaigen.Core.Application/Features/SpendTracking/Abstractions`)
-  - [ ] Define focused `ISpendTrackingRepository` interface (`ISpendTrackingRepository.cs`) - Methods: AddAsync, GetByIdAsync, GetAllAsync, UpdateAsync, DeleteAsync. (Ensure methods return `Task` or `Task<T>`). (ISP)
-  - [ ] Define focused `ISpendTrackingService` interface (`ISpendTrackingService.cs`) - Methods: CreateSpendRecordAsync(CreateSpendRecordDto dto), GetSpendRecordAsync(Guid id), ListSpendRecordsAsync(), etc. (Ensure methods return `Task` or `Task<T>`). (ISP)
+  - [x] Define focused `ISpendTrackingRepository` interface (`ISpendTrackingRepository.cs`) - Methods: AddAsync, GetByIdAsync, GetAllAsync, UpdateAsync, DeleteAsync. (Ensure methods return `Task` or `Task<T>`). (ISP)
+  - [x] Define focused `ISpendTrackingService` interface (`ISpendTrackingService.cs`) - Methods: CreateSpendRecordAsync(CreateSpendRecordDto dto), GetSpendRecordAsync(Guid id), ListSpendRecordsAsync(), etc. (Ensure methods return `Task` or `Task<T>`). (ISP)
 - **[Application - DTOs]** (`src/Campaigen.Core.Application/Features/SpendTracking/DTOs`)
-  - [ ] Define `SpendRecordDto` (`SpendRecordDto.cs`) for returning data.
-  - [ ] Define `CreateSpendRecordDto` (`CreateSpendRecordDto.cs`) for input data.
+  - [x] Define `SpendRecordDto` (`SpendRecordDto.cs`) for returning data.
+  - [x] Define `CreateSpendRecordDto` (`CreateSpendRecordDto.cs`) for input data.
 - **[Application - Logic]** (`src/Campaigen.Core.Application/Features/SpendTracking`)
-  - [ ] Implement `SpendTrackingService` (`SpendTrackingService.cs`) - Use `ISpendTrackingRepository` asynchronously, map between Domain Entities and DTOs.
+  - [x] Implement `SpendTrackingService` (`SpendTrackingService.cs`) - Use `ISpendTrackingRepository` asynchronously, map between Domain Entities and DTOs.
 - **[Infrastructure - Persistence]** (`src/Campaigen.Core.Infrastructure/Features/SpendTracking/Persistence`)
-  - [ ] Implement `SpendTrackingRepository` using EF Core (`SpendTrackingRepository.cs`) - Implement interface methods asynchronously (e.g., using `await _context.SpendRecords.AddAsync(entity)`).
-  - [ ] Add `DbSet<SpendRecord>` to `AppDbContext` (`src/Campaigen.Core.Infrastructure/Persistence/AppDbContext.cs`).
-  - [ ] Create EF Core Migration for SpendRecord (`dotnet ef migrations add AddSpendRecord --project src/Campaigen.Core.Infrastructure --startup-project src/Campaigen.CLI`).
+  - [x] Implement `SpendTrackingRepository` using EF Core (`SpendTrackingRepository.cs`) - Implement interface methods asynchronously (e.g., using `await _context.SpendRecords.AddAsync(entity)`).
+  - [x] Add `DbSet<SpendRecord>` to `AppDbContext` (`src/Campaigen.Core.Infrastructure/Persistence/AppDbContext.cs`).
+  - [x] Create EF Core Migration for SpendRecord (`dotnet ef migrations add AddSpendRecord --project src/Campaigen.Core.Infrastructure --startup-project src/Campaigen.CLI`).
 - **[DI Registration]** (`src/Campaigen.CLI/Program.cs`)
   - [x] Register `ISpendTrackingRepository` -> `SpendTrackingRepository`.
   - [x] Register `ISpendTrackingService` -> `SpendTrackingService`.
 - **[Unit Tests]** (`tests/Campaigen.Application.Tests/Features/SpendTracking`)
-  - [ ] Write unit tests for `SpendTrackingService` (mock repository, verify DTO mapping).
+  - [x] Write unit tests for `SpendTrackingService` (mock repository, verify DTO mapping).
 
 ## Phase 3: Feature - Influencer Management
 
