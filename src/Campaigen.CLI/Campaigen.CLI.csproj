@@ -22,4 +22,10 @@
     <ProjectReference Include="..\Campaigen.Core.Infrastructure\Campaigen.Core.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
