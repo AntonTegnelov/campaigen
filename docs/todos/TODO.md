@@ -129,7 +129,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] CLI Runner Helper: Create utility (`CliRunner.cs`?) to execute `Campaigen.CLI` with arguments, capture stdout/stderr, and return exit code.
 - **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
   - [x] Test `spend add`: Verify successful addition via output and direct DB check (optional).
-  - [ ] Test `spend list`: Verify output formatting and content after adding records.
+  - [x] Test `spend list`: Verify output formatting and content after adding records.
 
 ## Deferred Features
 

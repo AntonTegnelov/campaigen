@@ -106,7 +106,7 @@ public abstract class E2ETestBase : IDisposable
                 }
                 catch (IOException ex) when (i < maxRetries - 1)
                 {
-                    // Console.WriteLine($"Cleanup attempt {i + 1} failed for {TestDbPath}, retrying... Error: {ex.Message}"); // Debugging
+                    Console.WriteLine($"Cleanup attempt {i + 1} failed for {TestDbPath}, retrying... Error: {ex.Message}"); // Ensure this uses ex
                     System.Threading.Thread.Sleep(delayMs);
                     delayMs *= 2; // Exponential backoff
                 }
