@@ -80,8 +80,8 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Implement `InfluencerService` (`InfluencerService.cs`) - Use `IInfluencerRepository` asynchronously, map between Domain Entities and DTOs.
 - **[Infrastructure - Persistence]** (`src/Campaigen.Core.Infrastructure/Features/InfluencerManagement/Persistence`)
   - [x] Implement `InfluencerRepository` (`InfluencerRepository.cs`) - Implement interface methods asynchronously.
-  - [ ] Add `DbSet<Influencer>` to `AppDbContext`.
-  - [ ] Create EF Core Migration for Influencer (`dotnet ef migrations add AddInfluencer ...`).
+  - [x] Add `DbSet<Influencer>` to `AppDbContext`.
+  - [x] Create EF Core Migration for Influencer (`dotnet ef migrations add AddInfluencer ...`).
 - **[DI Registration]** (`src/Campaigen.CLI/Program.cs`)
   - [x] Register `IInfluencerRepository` -> `InfluencerRepository`.
   - [x] Register `IInfluencerService` -> `InfluencerService`.
