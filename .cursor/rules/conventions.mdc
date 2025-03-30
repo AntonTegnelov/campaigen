@@ -39,6 +39,7 @@ This document outlines coding conventions to follow, prioritizing code stability
   - Design components (functions, classes, modules) to be small, focused on a single responsibility, and loosely coupled.
 - **Testing:**
   - Write unit tests for core logic, focusing on correctness, edge cases, and error handling paths.
+  - Minimize the use of mocking, only mock when neccesssary
   - Write integration tests to verify interactions between components.
   - Aim for sufficient test coverage to ensure confidence in code stability.
 - **Linting:**
@@ -51,3 +52,9 @@ This document outlines coding conventions to follow, prioritizing code stability
   - Before finalizing code, explicitly review it for potential stability issues, adherence to these conventions, edge cases, and error handling robustness.
 - **Incremental Changes:**
   - Prefer making smaller, verifiable changes rather than large, monolithic ones. Test incrementally.
+- **SOLID:**
+  - SRP: Keep classes and methods focused on a single responsibility.
+  - OCP: Design for extension (e.g., adding new report types) without modifying existing code where possible.
+  - LSP: Ensure subtypes can substitute base types (relevant if using inheritance).
+  - ISP: Define small, focused interfaces (Interface Segregation Principle). Avoid large "god" interfaces.
+  - DIP: Depend on abstractions (interfaces), not concretions (Dependency Inversion Principle). Inject dependencies.

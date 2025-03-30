@@ -69,10 +69,10 @@ This document outlines the specific tasks for building the Campaigen application
 ## Phase 3: Feature - Influencer Management
 
 - **[Domain]** (`src/Campaigen.Core.Domain/Features/InfluencerManagement`)
-  - [ ] Define `Influencer` entity (`Influencer.cs`) - Properties: Id, Name, Handle, Platform, Niche, etc.
+  - [x] Define `Influencer` entity (`Influencer.cs`) - Properties: Id, Name, Handle, Platform, Niche, etc.
 - **[Application - Abstractions]** (`src/Campaigen.Core.Application/Features/InfluencerManagement/Abstractions`)
-  - [ ] Define focused `IInfluencerRepository` interface (`IInfluencerRepository.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
-  - [ ] Define focused `IInfluencerService` interface (`IInfluencerService.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
+  - [x] Define focused `IInfluencerRepository` interface (`IInfluencerRepository.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
+  - [x] Define focused `IInfluencerService` interface (`IInfluencerService.cs`) - Ensure methods return `Task` or `Task<T>`. (ISP)
 - **[Application - DTOs]** (`src/Campaigen.Core.Application/Features/InfluencerManagement/DTOs`)
   - [ ] Define `InfluencerDto` (`InfluencerDto.cs`).
   - [ ] Define `CreateInfluencerDto` (`CreateInfluencerDto.cs`).
