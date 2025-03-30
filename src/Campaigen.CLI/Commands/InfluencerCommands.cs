@@ -5,6 +5,7 @@ using System.CommandLine.Invocation;
 using System;
 using System.Threading.Tasks;
 using System.Linq; // Required for Any()
+using Microsoft.Extensions.DependencyInjection; // Add required using
 
 namespace Campaigen.CLI.Commands;
 
@@ -21,7 +22,7 @@ public static class InfluencerCommands
     public static Command BuildAddInfluencerCommand()
     {
         var nameOption = new Option<string>(
-            name: "--name",
+            name: "--influencer-name",
             description: "The name of the influencer.")
         { IsRequired = true };
         var handleOption = new Option<string?>(
@@ -34,13 +35,56 @@ public static class InfluencerCommands
             name: "--niche",
             description: "The influencer's niche or category.");
 
-        var addCommand = new AddInfluencerCommand();
-        addCommand.AddOption(nameOption);
-        addCommand.AddOption(handleOption);
-        addCommand.AddOption(platformOption);
-        addCommand.AddOption(nicheOption);
+        // Create a new Command instance
+        var command = new Command("add", "Add a new influencer.");
+        command.AddOption(nameOption);
+        command.AddOption(handleOption);
+        command.AddOption(platformOption);
+        command.AddOption(nicheOption);
 
-        return addCommand;
+        // Set the handler directly - RESTORED FULL LOGIC
+        command.SetHandler(async (InvocationContext context) =>
+        {
+            // Get parameters directly from the parse result
+            var influencerName = context.ParseResult.GetValueForOption(nameOption);
+            var handle = context.ParseResult.GetValueForOption(handleOption);
+            var platform = context.ParseResult.GetValueForOption(platformOption);
+            var niche = context.ParseResult.GetValueForOption(nicheOption);
+
+            // Resolve the service from the context
+            var influencerService = context.BindingContext.GetRequiredService<IInfluencerService>();
+
+            var dto = new CreateInfluencerDto
+            {
+                Name = influencerName,
+                Handle = handle,
+                Platform = platform,
+                Niche = niche
+            };
+
+            Console.WriteLine($"Adding influencer: Name=\"{dto.Name}\", Handle={dto.Handle ?? "N/A"}, Platform={dto.Platform ?? "N/A"}, Niche={dto.Niche ?? "N/A"}");
+            try
+            {
+                var result = await influencerService.CreateInfluencerAsync(dto);
+                if (result != null)
+                {
+                    Console.WriteLine("Influencer added successfully.");
+                    context.ExitCode = 0; // Set success exit code
+                }
+                else
+                {
+                    Console.Error.WriteLine("Failed to create influencer (Service returned null).");
+                    context.ExitCode = 1; // Set failure exit code
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred during influencer creation: {ex.Message}");
+                context.ExitCode = 1; // Set failure exit code
+            }
+        });
+
+        return command;
     }
 
     /// <summary>
@@ -54,7 +98,7 @@ public static class InfluencerCommands
 
     /// <summary>
     /// Represents the command definition for "influencer add".
-    /// Used for model binding command line arguments.
+    /// Used for model binding.
     /// </summary>
     public class AddInfluencerCommand : Command
     {
@@ -78,7 +122,6 @@ public static class InfluencerCommands
     {
         private readonly IInfluencerService _influencerService;
 
-        // Properties are bound from the command line arguments
         /// <summary>Gets or sets the influencer's name.</summary>
         public string Name { get; set; } = null!;
         /// <summary>Gets or sets the optional handle.</summary>
@@ -118,20 +161,19 @@ public static class InfluencerCommands
                 var result = await _influencerService.CreateInfluencerAsync(dto);
                 if (result != null)
                 {
-                    Console.WriteLine($"Influencer created with ID: {result.Id}");
-                    return 0; // Success
+                    Console.WriteLine("Influencer added successfully.");
+                    return 0;
                 }
                 else
                 {
                     Console.Error.WriteLine("Failed to create influencer (Service returned null).");
-                    return 1; // Failure
+                    return 1;
                 }
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"An error occurred during influencer creation: {ex.Message}");
-                // Consider logging the full exception ex
-                return 1; // Failure
+                return 1;
             }
         }
     }

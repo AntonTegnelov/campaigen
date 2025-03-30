@@ -55,7 +55,7 @@ await BuildCommandLine()
             // System.CommandLine.Hosting resolves the handler and injects dependencies
             host.UseCommandHandler<SpendCommands.AddSpendCommand, SpendCommands.AddSpendHandler>();
             host.UseCommandHandler<SpendCommands.ListSpendCommand, SpendCommands.ListSpendHandler>();
-            host.UseCommandHandler<InfluencerCommands.AddInfluencerCommand, InfluencerCommands.AddInfluencerHandler>();
+            // host.UseCommandHandler<InfluencerCommands.AddInfluencerCommand, InfluencerCommands.AddInfluencerHandler>(); // Handler is set directly
             host.UseCommandHandler<InfluencerCommands.ListInfluencerCommand, InfluencerCommands.ListInfluencerHandler>();
         })
     .UseDefaults() // Enable standard middleware like help, version, etc.
