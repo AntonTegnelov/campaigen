@@ -114,7 +114,7 @@ This document outlines the specific tasks for building the Campaigen application
 - [x] Update `README.md` with actual usage instructions.
 - [x] Add code comments.
 - [x] Create `CONTRIBUTING.md`.
-- [ ] Choose and Add a `LICENSE` file.
+- [x] Choose and Add a `LICENSE` file.
 - [ ] Set up basic CI/CD pipeline (Build & Test).
 
 ## Deferred Features
