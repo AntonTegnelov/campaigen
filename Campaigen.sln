@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CB57B8D9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Campaigen.Application.Tests", "tests\Campaigen.Application.Tests\Campaigen.Application.Tests.csproj", "{3369099A-2EDD-469A-B159-D5157D1EE253}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Campaigen.Infrastructure.Tests", "tests\Campaigen.Infrastructure.Tests\Campaigen.Infrastructure.Tests.csproj", "{6F7A790E-583B-4648-8C89-E40559528BD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{3369099A-2EDD-469A-B159-D5157D1EE253}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3369099A-2EDD-469A-B159-D5157D1EE253}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3369099A-2EDD-469A-B159-D5157D1EE253}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F7A790E-583B-4648-8C89-E40559528BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F7A790E-583B-4648-8C89-E40559528BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F7A790E-583B-4648-8C89-E40559528BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F7A790E-583B-4648-8C89-E40559528BD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{78549F4E-769E-4BAE-884D-A3377933E43B} = {BFE1709B-38E6-4B89-BEA1-943801C6B889}
@@ -53,5 +59,6 @@ Global
 		{8ED73E36-32F4-494A-AAD9-F2975BA750DA} = {BFE1709B-38E6-4B89-BEA1-943801C6B889}
 		{0FC3D6DA-0735-4FE2-BBB8-6DC3230EAC80} = {BFE1709B-38E6-4B89-BEA1-943801C6B889}
 		{3369099A-2EDD-469A-B159-D5157D1EE253} = {CB57B8D9-9EB0-409C-96E9-83C003A852C1}
+		{6F7A790E-583B-4648-8C89-E40559528BD6} = {CB57B8D9-9EB0-409C-96E9-83C003A852C1}
 	EndGlobalSection
 EndGlobal
