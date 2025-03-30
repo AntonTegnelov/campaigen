@@ -98,7 +98,7 @@ This document outlines the specific tasks for building the Campaigen application
   - [x] Implement `spend list` command - Inject `ISpendTrackingService`, call service methods asynchronously, display results from `SpendRecordDto` list.
   - [x] Register spend commands with `RootCommand` in `Program.cs`.
 - **[Influencer Management Commands]** (`src/Campaigen.CLI/Commands/InfluencerCommands.cs` or similar)
-  - [ ] Implement `influencer add` command - Inject `IInfluencerService`, call service methods asynchronously, use `CreateInfluencerDto`.
+  - [x] Implement `influencer add` command - Inject `IInfluencerService`, call service methods asynchronously, use `CreateInfluencerDto`.
   - [ ] Implement `influencer list` command - Inject `IInfluencerService`, call service methods asynchronously, display results from `InfluencerDto` list.
   - [x] Register influencer commands with `RootCommand` in `Program.cs`.
 - **[Usability]**
