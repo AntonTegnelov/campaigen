@@ -117,6 +117,24 @@ This document outlines the specific tasks for building the Campaigen application
 - [x] Choose and Add a `LICENSE` file.
 - [x] Set up basic CI/CD pipeline (Build & Test).
 
+## Phase 6: End-to-End (E2E) Testing
+
+- **[Setup]**
+  - [x] Create E2E Test Project (`dotnet new xunit -n Campaigen.Tests.E2E -o tests/Campaigen.Tests.E2E`).
+  - [x] Add `Campaigen.Tests.E2E` to solution (`dotnet sln add tests/Campaigen.Tests.E2E/Campaigen.Tests.E2E.csproj`).
+  - [x] Add reference from `Campaigen.Tests.E2E` to `Campaigen.CLI` (`dotnet add tests/Campaigen.Tests.E2E/Campaigen.Tests.E2E.csproj reference src/Campaigen.CLI/Campaigen.CLI.csproj`).
+- **[Implementation]**
+  - [ ] Isolate Test Runs: Implement strategy for unique, temporary SQLite DB per test run (e.g., in test fixtures or base classes). Ensure cleanup.
+  - [ ] Database Setup Helper: Create utility to apply EF Core migrations to the test database before test execution.
+  - [ ] CLI Runner Helper: Create utility (`CliRunner.cs`?) to execute `Campaigen.CLI` with arguments, capture stdout/stderr, and return exit code.
+- **[Test Cases]** (`tests/Campaigen.Tests.E2E`)
+  - [ ] Test `spend add`: Verify successful addition via output and direct DB check (optional).
+  - [ ] Test `spend list`: Verify output formatting and content after adding records.
+  - [ ] Test `influencer add`: Verify successful addition.
+  - [ ] Test `influencer list`: Verify output formatting and content.
+  - [ ] Test Help Commands (`--help` for root and subcommands).
+  - [ ] (Optional) Test Error Conditions: Invalid arguments, non-existent data lookups, etc.
+
 ## Deferred Features
 
 - Social Media Monitoring
