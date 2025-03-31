@@ -23,7 +23,7 @@ Campaigen provides command-line tools to record and view marketing spend and inf
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/AntonTegnelov/campaigen.git
+    git clone <repository-url>
     cd campaigen
     ```
 2.  **Database Setup:**
@@ -91,6 +91,10 @@ The `--` is important to separate `dotnet run` options from the application's co
   ```powershell
   dotnet run --project src/Campaigen.CLI/Campaigen.CLI.csproj -- influencer list
   ```
+
+## Contributing
+
+Contributions are welcome! Please create an issue to discuss potential changes before submitting pull requests.
 
 ## License
 
