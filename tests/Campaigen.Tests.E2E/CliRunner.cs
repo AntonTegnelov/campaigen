@@ -41,19 +41,46 @@ namespace Campaigen.Tests.E2E
         public static async Task<CliResult> RunAsync(string[] args, Dictionary<string, string>? environmentVariables = null)
         {
             // Calculate paths relative to the current test execution directory
-            // IMPORTANT: This assumes a standard 'Debug' build configuration for tests.
-            // Adjust if using 'Release' or other configurations.
             var solutionRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
             var cliProjectDir = Path.Combine(solutionRoot, "src", "Campaigen.CLI");
-            var cliDllPath = Path.Combine(cliProjectDir, "bin", "Debug", "net8.0", "Campaigen.CLI.dll"); // Adjust net8.0 if needed
-
-            // Old path for dotnet run:
-            // var cliProjectPath = Path.Combine(cliProjectDir, "Campaigen.CLI.csproj");
-
-            if (!File.Exists(cliDllPath))
+            
+            // Check for both Release and Debug configurations
+            // First check the current test configuration (if we're running Release tests, check Release first)
+            string? testConfiguration = null;
+            
+            // Try to determine whether we're running in Debug or Release from the path
+            if (AppContext.BaseDirectory.Contains("Release"))
             {
-                throw new FileNotFoundException($"CLI DLL not found at expected path: {cliDllPath}. " +
-                                                "Ensure the project is built in Debug configuration and the path calculation in CliRunner.cs is correct.");
+                testConfiguration = "Release";
+            }
+            else if (AppContext.BaseDirectory.Contains("Debug"))
+            {
+                testConfiguration = "Debug";
+            }
+            
+            // Try possible configurations, starting with the current test configuration if known
+            string[] configurations = testConfiguration != null
+                ? new[] { testConfiguration, testConfiguration == "Release" ? "Debug" : "Release" }
+                : new[] { "Release", "Debug" };
+                
+            string cliDllPath = string.Empty;
+            bool foundDll = false;
+            
+            foreach (var config in configurations)
+            {
+                var possiblePath = Path.Combine(cliProjectDir, "bin", config, "net8.0", "Campaigen.CLI.dll");
+                if (File.Exists(possiblePath))
+                {
+                    cliDllPath = possiblePath;
+                    foundDll = true;
+                    break;
+                }
+            }
+
+            if (!foundDll)
+            {
+                throw new FileNotFoundException($"CLI DLL not found in any configuration (checked Release and Debug). " +
+                                                "Ensure the project is built before running tests.");
             }
 
             var processStartInfo = new ProcessStartInfo
