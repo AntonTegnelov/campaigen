@@ -23,12 +23,12 @@ Campaigen provides command-line tools to record and view marketing spend and inf
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repository-url>
+    git clone <repository-url>
     cd campaigen
     ```
 2.  **Database Setup:**
 
-    - The application uses SQLite. The database file (`campaigen.db` by default) will be created automatically in the output directory (`src/Campaigen.CLI/bin/Debug/net8.0/`) when the application runs for the first time after a migration.
+    - The application uses SQLite. The database file (`campaigen_data.db`) will be created automatically in the solution root directory when the application runs for the first time after a migration.
     - The connection string is configured in `src/Campaigen.CLI/appsettings.json`. You can modify the database path there if needed.
     - **Apply Migrations:** Ensure the database schema is up-to-date by applying EF Core migrations. Run the following command from the **repository root**:
       ```powershell
@@ -98,4 +98,4 @@ Contributions are welcome! Please create an issue to discuss potential changes b
 
 ## License
 
-(Consider adding a LICENSE file - e.g., MIT)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
