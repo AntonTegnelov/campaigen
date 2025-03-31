@@ -91,11 +91,23 @@ public class SpendCommandsTests : E2ETestBase // Inherit from the base class
         // Check for specific record details (adjust formatting checks as needed based on actual output)
         result.StandardOutput.Should().Contain(record1Desc, because: "the first record's description should be listed.");
         result.StandardOutput.Should().Contain(record1Cat, because: "the first record's category should be listed.");
-        result.StandardOutput.Should().Contain(record1Amount.ToString("F2").Replace(".", ","), because: "the first record's amount should be listed formatted to 2 decimal places."); // Check formatted amount with comma
+        
+        // Make the decimal format check culture-invariant (accept either . or , as separator)
+        string amountWithDot = record1Amount.ToString("F2", CultureInfo.InvariantCulture); // 50.00
+        string amountWithComma = record1Amount.ToString("F2", CultureInfo.GetCultureInfo("fr-FR")); // 50,00
+        result.StandardOutput.Should().Match(output => 
+            output.Contains(amountWithDot) || output.Contains(amountWithComma), 
+            because: "the first record's amount should be listed with 2 decimal places (period or comma separator).");
 
         result.StandardOutput.Should().Contain(record2Desc, because: "the second record's description should be listed.");
         result.StandardOutput.Should().Contain(record2Cat, because: "the second record's category should be listed.");
-        result.StandardOutput.Should().Contain(record2Amount.ToString("F2").Replace(".", ","), because: "the second record's amount should be listed formatted to 2 decimal places."); // Check formatted amount with comma
+        
+        // Make the decimal format check culture-invariant for the second record too
+        string amount2WithDot = record2Amount.ToString("F2", CultureInfo.InvariantCulture); // 75.50
+        string amount2WithComma = record2Amount.ToString("F2", CultureInfo.GetCultureInfo("fr-FR")); // 75,50
+        result.StandardOutput.Should().Match(output => 
+            output.Contains(amount2WithDot) || output.Contains(amount2WithComma), 
+            because: "the second record's amount should be listed with 2 decimal places (period or comma separator).");
     }
 
     [Theory]
