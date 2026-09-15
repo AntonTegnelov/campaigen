@@ -1,0 +1,39 @@
+name: campaigen
+
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: campaigen-dev:latest
+    container_name: campaigen
+    hostname: campaigen
+    ports:
+      # Host 2236 -> container sshd :22. Port allocation lives in
+      # E:\Programmering\Code\DEVCONTAINER_TEMPLATE.md — claim there first.
+      - "2236:22"
+    volumes:
+      # Repo root (includes any gitignored .env via the mount, never the image).
+      - ..:/workspaces/campaigen:cached
+      # Host pubkeys installed by the entrypoint at startup — edit
+      # %USERPROFILE%\.ssh\authorized_keys and restart, no rebuild needed.
+      - ${USERPROFILE}/.ssh/authorized_keys:/tmp/host_authorized_keys:ro
+      # Persist Claude Code OAuth credentials across rebuilds.
+      - claude-config:/home/dev/.claude
+      # Stable sshd host-key fingerprint across down/up cycles.
+      - ssh-host-keys:/etc/ssh/keys
+      # PAT credential store (and any other ~/.ssh state) survives recreates.
+      - ssh-config:/home/dev/.ssh
+      # NuGet package cache and global dotnet tools (dotnet-ef) survive
+      # recreates (Zed's dev container flow recreates on first attach).
+      - nuget:/home/dev/.nuget
+      - dotnet-home:/home/dev/.dotnet
+    restart: unless-stopped
+    init: true
+
+volumes:
+  claude-config:
+  ssh-host-keys:
+  ssh-config:
+  nuget:
+  dotnet-home:

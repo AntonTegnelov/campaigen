@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+!.env.example
+**/bin/
+**/obj/
+.vs/
+.vscode
+.cursor
+.aider*
+*.db
+*.db-journal
