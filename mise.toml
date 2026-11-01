@@ -1,0 +1,12 @@
+[tools]
+dotnet = "8"
+node = "22"
+
+[tasks.build]
+run = "dotnet build Campaigen.sln"
+
+[tasks.test]
+run = "dotnet test Campaigen.sln"
+
+[tasks.run]
+run = "dotnet run --project src/Campaigen.CLI"
